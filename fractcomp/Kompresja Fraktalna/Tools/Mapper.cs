@@ -40,6 +40,7 @@ namespace FractalCompression.Tools
             k = pi.X - pk.X * a;
             d = a;
             l = pi.Y - pk.Y * d;
+            
         }
 
         public MappedPoint MapPoint(int x, int y, double val)
