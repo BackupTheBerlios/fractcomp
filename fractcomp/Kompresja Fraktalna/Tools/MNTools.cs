@@ -45,7 +45,7 @@ namespace FractalCompression.Tools
                     int bitmapVal = bitmap.GetPixel(x, y).B;
                     meanVal += bitmapVal - funVal;
                 }
-                u += meanVal / (x2 - x1);
+                u += Math.Abs(meanVal) / (x2 - x1);
             }
             return u;
         }
@@ -66,7 +66,7 @@ namespace FractalCompression.Tools
                     int bitmapVal = bitmap.GetPixel(x, y).B;
                     meanVal += bitmapVal - funVal;
                 }
-                u += meanVal / (x2 - x1);
+                u += Math.Abs(meanVal) / (x2 - x1);
             }
             return u;
         }
