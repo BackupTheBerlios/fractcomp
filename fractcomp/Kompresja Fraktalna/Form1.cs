@@ -12,6 +12,8 @@ namespace FractalCompression
 {
     public partial class Form1 : Form
     {
+        private Bitmap bitmap;
+
         public Form1()
         {
             InitializeComponent();
@@ -33,6 +35,26 @@ namespace FractalCompression
                 new Point(sdelta,sdelta),new Point(sdelta,0));
             double s = MNTools.ComputeContractivityFactor(d, r, bitmap);
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                this.bitmap = (Bitmap)Bitmap.FromFile(openFileDialog1.FileName);
+                this.originallPictureBox.Image = bitmap;
+                this.compresedPictureBox.Image = bitmap;
+            }
         }
     }
 }
