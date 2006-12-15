@@ -22,5 +22,41 @@ namespace FractalCompression.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int smallDelta {
+            get {
+                return ((int)(this["smallDelta"]));
+            }
+            set {
+                this["smallDelta"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("16")]
+        public int bigDelta {
+            get {
+                return ((int)(this["bigDelta"]));
+            }
+            set {
+                this["bigDelta"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int a {
+            get {
+                return ((int)(this["a"]));
+            }
+            set {
+                this["a"] = value;
+            }
+        }
     }
 }

@@ -6,3 +6,5 @@ obj\Debug\Kompresja Fraktalna.exe
 obj\Debug\Kompresja Fraktalna.pdb
 obj\Debug\FractalCompression.Properties.Resources.resources
 obj\Debug\FractalCompression.Form1.resources
+obj\Debug\FractalCompression.Settings.resources
+bin\Debug\Kompresja Fraktalna.exe.config

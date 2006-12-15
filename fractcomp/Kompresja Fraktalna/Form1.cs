@@ -30,7 +30,7 @@ namespace FractalCompression
             int sdelta = 4;
             int bdelta = 16;
             Domain d = new Domain(new Point(0,0),new Point(0,bdelta),
-                new Point(bdelta,bdelta),new Point(bdelta,0));
+                new Point(bdelta,bdelta),new Point(bdelta,0), bdelta / sdelta);
             Structure.Region r = new Structure.Region(new Point(0,0),new Point(0,sdelta),
                 new Point(sdelta,sdelta),new Point(sdelta,0));
             double s = MNTools.ComputeContractivityFactor(d, r, bitmap);
@@ -51,10 +51,23 @@ namespace FractalCompression
         {
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                this.bitmap = (Bitmap)Bitmap.FromFile(openFileDialog1.FileName);
+                Image temp = Bitmap.FromFile(openFileDialog1.FileName);
+                int big = Properties.Settings.Default.bigDelta;
+                int modulo   = temp.Size.Width % big;
+                int times = temp.Size.Width / big;
+                int xNewSize = (times + ((modulo >= big / 2) ? 1 : 0)) * big;
+                modulo = temp.Size.Height % big;
+                times = temp.Size.Height / big;
+                int yNewSize = (times + ((modulo >= big / 2) ? 1 : 0)) * big;
+                this.bitmap = new Bitmap(temp, xNewSize, yNewSize);
                 this.originallPictureBox.Image = bitmap;
                 this.compresedPictureBox.Image = bitmap;
             }
+        }
+
+        private void settinsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
