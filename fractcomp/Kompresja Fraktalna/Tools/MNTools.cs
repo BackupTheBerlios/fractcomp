@@ -50,6 +50,18 @@ namespace FractalCompression.Tools
             return u;
         }
 
+        public static Bitmap RescaleBitmap(Image temp)
+        {
+            int big = Properties.Settings.Default.bigDelta;
+            int modulo = temp.Size.Width % big;
+            int times = temp.Size.Width / big;
+            int xNewSize = (times + ((modulo >= big / 2) ? 1 : 0)) * big;
+            modulo = temp.Size.Height % big;
+            times = temp.Size.Height / big;
+            int yNewSize = (times + ((modulo >= big / 2) ? 1 : 0)) * big;
+            return new Bitmap(temp, xNewSize, yNewSize);
+        }
+
         private static double ComputeHorizontally(int x1, int y1, int x2, int y2, Bitmap bitmap)
         {
             double u = 0;

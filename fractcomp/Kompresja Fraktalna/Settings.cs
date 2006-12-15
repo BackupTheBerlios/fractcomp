@@ -25,19 +25,20 @@ namespace FractalCompression
 
         private void OKBtn_Click(object sender, EventArgs e)
         {
-            if (Validate())
+            if (ValidateData())
             {
                 this.errorProvider1.SetError(this.OKBtn, "");
                 Properties.Settings.Default.bigDelta = bigDelta;
                 Properties.Settings.Default.a = a;
                 Properties.Settings.Default.smallDelta = bigDelta / a;
+                Properties.Settings.Default.Save();
                 this.Close();
             }
             else
                 this.errorProvider1.SetError(this.OKBtn, "Not all values are correct");
         }
 
-        private bool Validate()
+        private bool ValidateData()
         {
             if (Int32.TryParse(this.domainTextBox.Text, out bigDelta))
                 if (Int32.TryParse(this.regionTextBox.Text,out  a))
@@ -50,7 +51,7 @@ namespace FractalCompression
             bigDelta = Properties.Settings.Default.bigDelta;
             a = Properties.Settings.Default.a;
             this.domainTextBox.Text = bigDelta.ToString();
-            this.regionTextBox.Text = a.ToString;
+            this.regionTextBox.Text = a.ToString();
         }
     }
 }

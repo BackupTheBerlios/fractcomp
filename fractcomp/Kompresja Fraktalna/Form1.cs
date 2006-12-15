@@ -13,6 +13,7 @@ namespace FractalCompression
     public partial class Form1 : Form
     {
         private Bitmap bitmap;
+        Settings set = new Settings();
 
         public Form1()
         {
@@ -51,22 +52,18 @@ namespace FractalCompression
         {
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                Image temp = Bitmap.FromFile(openFileDialog1.FileName);
-                int big = Properties.Settings.Default.bigDelta;
-                int modulo   = temp.Size.Width % big;
-                int times = temp.Size.Width / big;
-                int xNewSize = (times + ((modulo >= big / 2) ? 1 : 0)) * big;
-                modulo = temp.Size.Height % big;
-                times = temp.Size.Height / big;
-                int yNewSize = (times + ((modulo >= big / 2) ? 1 : 0)) * big;
-                this.bitmap = new Bitmap(temp, xNewSize, yNewSize);
+                this.bitmap = MNTools.RescaleBitmap(
+                    Image.FromFile(openFileDialog1.FileName));
                 this.originallPictureBox.Image = bitmap;
                 this.compresedPictureBox.Image = bitmap;
-            }
+                 }
         }
 
         private void settinsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (set.ShowDialog() == DialogResult.OK && bitmap != null)
+                bitmap = MNTools.RescaleBitmap((Image)bitmap);
+            
 
         }
     }

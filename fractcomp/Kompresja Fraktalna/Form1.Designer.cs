@@ -34,11 +34,11 @@ namespace FractalCompression
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settinsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.originallPictureBox = new System.Windows.Forms.PictureBox();
             this.compresedPictureBox = new System.Windows.Forms.PictureBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.settinsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -94,6 +94,13 @@ namespace FractalCompression
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // settinsToolStripMenuItem
+            // 
+            this.settinsToolStripMenuItem.Name = "settinsToolStripMenuItem";
+            this.settinsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
+            this.settinsToolStripMenuItem.Text = "&Settings";
+            this.settinsToolStripMenuItem.Click += new System.EventHandler(this.settinsToolStripMenuItem_Click);
+            // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -107,6 +114,7 @@ namespace FractalCompression
             // 
             // splitContainer1.Panel2
             // 
+            this.splitContainer1.Panel2.AutoScroll = true;
             this.splitContainer1.Panel2.Controls.Add(this.compresedPictureBox);
             this.splitContainer1.Size = new System.Drawing.Size(638, 356);
             this.splitContainer1.SplitterDistance = 325;
@@ -138,13 +146,6 @@ namespace FractalCompression
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // settinsToolStripMenuItem
-            // 
-            this.settinsToolStripMenuItem.Name = "settinsToolStripMenuItem";
-            this.settinsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
-            this.settinsToolStripMenuItem.Text = "&Settings";
-            this.settinsToolStripMenuItem.Click += new System.EventHandler(this.settinsToolStripMenuItem_Click);
             // 
             // Form1
             // 
