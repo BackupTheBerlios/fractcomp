@@ -58,17 +58,17 @@ namespace FractalCompression.Structure
 
         public double Left(int v, Bitmap bitmap)
         {
-            POTools.Point3D interpolP = new POTools.Point3D(
+            Point3D interpolP = new Point3D(
                 vertices[0].X,
                 vertices[0].Y + a * v,
                 bitmap.GetPixel(vertices[0].X, vertices[0].Y + a * v).ToArgb());
 
-            POTools.Point3D lineStart = new POTools.Point3D(
+            Point3D lineStart = new Point3D(
                 vertices[0].X,
                 vertices[0].Y,
                 bitmap.GetPixel(vertices[0].X, vertices[0].Y).ToArgb());
 
-            POTools.Point3D lineEnd = new POTools.Point3D(
+            Point3D lineEnd = new Point3D(
                 vertices[1].X,
                 vertices[1].Y,
                 bitmap.GetPixel(vertices[1].X, vertices[1].Y).ToArgb());
@@ -78,22 +78,22 @@ namespace FractalCompression.Structure
                 new PointF((float)lineStart.Y, (float)lineStart.Z),
                 new PointF((float)lineEnd.Y, (float)lineEnd.Z));
 
-            return signum * POTools.Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
+            return signum * Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
         }
 
         public double Right(int v, Bitmap bitmap)
         {
-            POTools.Point3D interpolP = new POTools.Point3D(
+            Point3D interpolP = new Point3D(
                 vertices[3].X,
                 vertices[3].Y + a * v,
                 bitmap.GetPixel(vertices[3].X, vertices[3].Y + a * v).ToArgb());
 
-            POTools.Point3D lineStart = new POTools.Point3D(
+            Point3D lineStart = new Point3D(
                 vertices[2].X,
                 vertices[2].Y,
                 bitmap.GetPixel(vertices[2].X, vertices[2].Y).ToArgb());
 
-            POTools.Point3D lineEnd = new POTools.Point3D(
+            Point3D lineEnd = new Point3D(
                 vertices[3].X,
                 vertices[3].Y,
                 bitmap.GetPixel(vertices[3].X, vertices[3].Y).ToArgb());
@@ -103,22 +103,22 @@ namespace FractalCompression.Structure
                 new PointF((float)lineStart.Y, (float)lineStart.Z),
                 new PointF((float)lineEnd.Y, (float)lineEnd.Z));
 
-            return signum * POTools.Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
+            return signum * Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
         }
 
         public double Down(int v, Bitmap bitmap)
         {
-            POTools.Point3D interpolP = new POTools.Point3D(
+            Point3D interpolP = new Point3D(
                 vertices[0].X + a * v,
                 vertices[0].Y,
                 bitmap.GetPixel(vertices[0].X + a * v, vertices[0].Y).ToArgb());
 
-            POTools.Point3D lineStart = new POTools.Point3D(
+            Point3D lineStart = new Point3D(
                 vertices[0].X,
                 vertices[0].Y,
                 bitmap.GetPixel(vertices[0].X, vertices[0].Y).ToArgb());
 
-            POTools.Point3D lineEnd = new POTools.Point3D(
+            Point3D lineEnd = new Point3D(
                 vertices[3].X,
                 vertices[3].Y,
                 bitmap.GetPixel(vertices[3].X, vertices[3].Y).ToArgb());
@@ -128,22 +128,22 @@ namespace FractalCompression.Structure
                new PointF((float)lineStart.X, (float)lineStart.Z),
                new PointF((float)lineEnd.X, (float)lineEnd.Z));
 
-            return signum * POTools.Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
+            return signum * Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
         }
 
         public double Up(int v, Bitmap bitmap)
         {
-            POTools.Point3D interpolP = new POTools.Point3D(
+            Point3D interpolP = new Point3D(
                 vertices[1].X + a * v,
                 vertices[1].Y,
                 bitmap.GetPixel(vertices[1].X + a * v, vertices[1].Y).ToArgb());
 
-            POTools.Point3D lineStart = new POTools.Point3D(
+            Point3D lineStart = new Point3D(
                 vertices[1].X,
                 vertices[1].Y,
                 bitmap.GetPixel(vertices[1].X, vertices[1].Y).ToArgb());
 
-            POTools.Point3D lineEnd = new POTools.Point3D(
+            Point3D lineEnd = new Point3D(
                 vertices[2].X,
                 vertices[2].Y,
                 bitmap.GetPixel(vertices[2].X, vertices[2].Y).ToArgb());
@@ -153,7 +153,7 @@ namespace FractalCompression.Structure
                new PointF((float)lineStart.X, (float)lineStart.Z),
                new PointF((float)lineEnd.X, (float)lineEnd.Z));
 
-            return signum * POTools.Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
+            return signum * Point3D.DistancePointLine(interpolP, lineStart, lineEnd);
         }
     }
 }
