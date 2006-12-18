@@ -13,14 +13,16 @@ namespace FractalCompression.Structure
 
         private Queue<Region> squeue;
         private Queue<Point> iqueue;
-        private Queue<double> cqueue;       //contractivity factors
-        private Queue<Point> aqueue;        //addresses
+
+        private Queue<double> cqueue;            //contractivity factors
+        private Queue<Point3D> aqueue;          //addresses domain's i,j, minHij
         private Queue<Region> squeue2;
 
         private double[,] h;
         private Domain[,] domains;
         private Region[,] regions;
         private Bitmap bitmap;
+	
 
         public Compressor(int bigDelta, int a, int eps, int dmax, Domain[,] domains, Region[,] regions, Point[,] interpolationPoints, Bitmap bitmap)
         {
@@ -41,7 +43,7 @@ namespace FractalCompression.Structure
             foreach (Point p in interpolationPoints)
                 iqueue.Enqueue(p);
 
-            aqueue = new Queue<Point>();
+            aqueue = new Queue<Point3D>();
             cqueue = new Queue<double>();
             squeue2 = new Queue<Region>();
 
@@ -55,6 +57,7 @@ namespace FractalCompression.Structure
         {
             do
             {
+                double s = 0;
                 while (squeue.Count != 0)
                 {
                     Region r = squeue.Dequeue();
@@ -64,7 +67,7 @@ namespace FractalCompression.Structure
                             Domain dom = domains[i, j];
                             if (dom != null)
                             {
-                                double s = MNTools.ComputeContractivityFactor(dom, r, bitmap);
+                                s = MNTools.ComputeContractivityFactor(dom, r, bitmap);
                                 if (Math.Abs(s) >= 1)
                                     continue;
 
@@ -98,11 +101,14 @@ namespace FractalCompression.Structure
 
                     if (minH > eps && d < dmax)
                     {
+                        //TODO:
                         //create four new regions....
                     }
                     else
                     {
                         //store j with the min distance inside aqueue and s inside cqueue
+                        aqueue.Enqueue(new Point3D(minHi, minHj, minH));
+                        cqueue.Enqueue(s);
                     }
                 }
 
@@ -114,6 +120,22 @@ namespace FractalCompression.Structure
             } while (squeue2.Count != 0);
 
             //store dmax, smallDelta, bigDelta, cqueue, iqueue, aqueue
+        }
+
+        public Queue<Point> Iqueue
+        {
+            get { return iqueue; }
+        }
+
+
+        public Queue<Point3D> Aqueue
+        {
+            get { return aqueue; }
+        }
+
+        public Queue<double> Cqueue
+        {
+            get { return cqueue;}
         }
     }
 }
