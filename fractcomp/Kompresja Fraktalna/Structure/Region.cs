@@ -73,5 +73,23 @@ namespace FractalCompression.Structure
             this.vertices = vertices;
             mappedVals = new double[vertices[3].X - vertices[0].X + 1, vertices[1].Y - vertices[0].Y + 1];
         }
+
+        public Region(Point p0, Point p1, Point p2, Point p3, double[,] mappedVals)
+        {
+            vertices = new Point[4];
+            vertices[0] = p0;
+            vertices[1] = p1;
+            vertices[2] = p2;
+            vertices[3] = p3;
+            this.mappedVals = mappedVals;
+        }
+
+        public Region(Point[] vertices, double[,] mappedVals)
+        {
+            if (vertices == null || vertices.Length != 4)
+                throw new Exception("Invalid argument");
+            this.vertices = vertices;
+            this.mappedVals = mappedVals;
+        }
     }
 }
