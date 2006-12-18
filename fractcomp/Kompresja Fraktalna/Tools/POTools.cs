@@ -23,7 +23,7 @@ namespace FractalCompression.Tools
             return true;
         }
 
-        public static bool CheckConditionOfContinuity(Domain[,] domains, int i, int j, double[,] s, int a, FractalCompression.Structure.Region region, Bitmap bitmap)
+        public static bool CheckConditionOfContinuity(Domain[,] domains, int i, int j, int a, FractalCompression.Structure.Region region, Bitmap bitmap)
         {
             if (i<0 || j<0 || (i > domains.GetUpperBound(0) - 1) || (j > domains.GetUpperBound(1) - 1))
                 throw new ArgumentException("Incorrect i or j values");

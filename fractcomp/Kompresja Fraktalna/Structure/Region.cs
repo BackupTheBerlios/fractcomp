@@ -45,6 +45,12 @@ namespace FractalCompression.Structure
             }
         }
 
+        public double[,] MappedVals
+        {
+            get { return mappedVals; }
+            set { mappedVals = value; }
+        }
+
         public int Size
         {
             get { return vertices[3].X - vertices[0].X; }
