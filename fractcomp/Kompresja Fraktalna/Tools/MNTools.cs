@@ -35,14 +35,14 @@ namespace FractalCompression.Tools
             for (int y = y1; y <= y2; y++)
             {
                 double meanVal = 0;
-                int yF1 = bitmap.GetPixel(x1, y).B;
-                int yF2 = bitmap.GetPixel(x2, y).B;
+                int yF1 = GetBitmapValue(x1, y, bitmap);
+                int yF2 = GetBitmapValue(x2, y, bitmap);
                 double a = (yF1 - yF2) / (double)(x1 - x2);
                 double b = yF1 - a * x1;
                 for (int x = x1; x <= x2; x++)
                 {
                     double funVal = a * x + b;
-                    int bitmapVal = bitmap.GetPixel(x, y).B;
+                    int bitmapVal = GetBitmapValue(x, y, bitmap);
                     meanVal += bitmapVal - funVal;
                 }
                 u += Math.Abs(meanVal) / (x2 - x1);
@@ -68,14 +68,14 @@ namespace FractalCompression.Tools
             for (int x = x1; x <= x2; x++)
             {
                 double meanVal = 0;
-                int yF1 = bitmap.GetPixel(x, y1).B;
-                int yF2 = bitmap.GetPixel(x, y2).B;
+                int yF1 = GetBitmapValue(x, y1, bitmap);
+                int yF2 = GetBitmapValue(x, y2, bitmap);
                 double a = (yF1 - yF2) / (double)(y1 - y2);
                 double b = yF1 - a * y1;
                 for (int y = y1; y <= y2; y++)
                 {
                     double funVal = a * y + b;
-                    int bitmapVal = bitmap.GetPixel(x, y).B;
+                    int bitmapVal = GetBitmapValue(x, y, bitmap);
                     meanVal += bitmapVal - funVal;
                 }
                 u += Math.Abs(meanVal) / (x2 - x1);
@@ -100,7 +100,7 @@ namespace FractalCompression.Tools
                 for (int y = mappedRegion.Vertices[0].Y; y <= mappedRegion.Vertices[1].Y; y++)
                 {
                     h += DistanceMeasure(mappedRegion[x - mappedRegion.Size, y - mappedRegion.Size],
-                        bitmap.GetPixel(x, y).B);
+                        GetBitmapValue(x, y, bitmap));
                 }
             }
             return h;

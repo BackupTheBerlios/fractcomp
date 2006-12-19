@@ -84,6 +84,7 @@
     <Compile Include="Tools\MappedPoint.cs" />
     <Compile Include="Tools\Mapper.cs" />
     <Compile Include="Tools\MNTools.cs" />
+    <Compile Include="Tools\Point3D.cs" />
     <Compile Include="Tools\POTools.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
