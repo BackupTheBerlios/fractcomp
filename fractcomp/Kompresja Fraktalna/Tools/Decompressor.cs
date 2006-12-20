@@ -33,7 +33,7 @@ namespace FractalCompression.Tools
 
         public Bitmap DecompressImage()
         {
-            int steps = Math.Truncate(Math.Log(smallDelta, 2) / Math.Log(a, 2));
+            int steps = (int)Math.Truncate(Math.Log(smallDelta, 2) / Math.Log(a, 2));
             Bitmap bit = new Bitmap(width, height, 
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             foreach (MappedPoint mp in interpolationPoints)
@@ -42,7 +42,15 @@ namespace FractalCompression.Tools
             {
                 for (int i = 0; i < Math.Min(steps, dmax); i++)
                 {
-                    // i tutaj cos powinno byc dalej :)
+                    for (int j = 0; j < interpolationPoints.Count; j++)
+                    {
+                        int coresspondingDomain = addresses[j];
+                        if (j != 0)
+                        {
+                            double contractivityFactor = contrctivtyFactors[j];
+                            //to be continued..
+                        }
+                    }
                 }
             }
             return bit;
