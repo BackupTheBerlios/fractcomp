@@ -80,6 +80,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Structure\Region.cs" />
+    <Compile Include="Tools\Decompressor.cs" />
     <Compile Include="Tools\Gauss.cs" />
     <Compile Include="Tools\MappedPoint.cs" />
     <Compile Include="Tools\Mapper.cs" />
