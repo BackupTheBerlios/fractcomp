@@ -52,7 +52,6 @@ namespace FractalCompression
             // 
             // OKBtn
             // 
-            this.OKBtn.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OKBtn.Location = new System.Drawing.Point(192, 156);
             this.OKBtn.Name = "OKBtn";
             this.OKBtn.Size = new System.Drawing.Size(75, 23);
