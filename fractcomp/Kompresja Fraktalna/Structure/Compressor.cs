@@ -14,8 +14,8 @@ namespace FractalCompression.Structure
         private Queue<Region> squeue;
         private Queue<Point> iqueue;
 
-        private Queue<double> cqueue;            //contractivity factors
-        private Queue<Point3D> aqueue;          //addresses domain's i,j, minHij
+        private Queue<double> cqueue;               //contractivity factors
+        private Queue<Point3D> aqueue;              //addresses domain's i,j, minHij
         private Queue<Region> squeue2;
 
         private double[,] h;
@@ -82,6 +82,7 @@ namespace FractalCompression.Structure
                                     bitmap.GetPixel(pk.X + smallDelta, pk.Y).ToArgb(), bitmap.GetPixel(pk.X + smallDelta, pk.Y + smallDelta).ToArgb());
 
                                 Region mappedRegion = POTools.MapDomainToRegion(dom, r, bitmap, mapper, a);
+                                // to jest Ÿle - hij odnosi siê do j-tej domeny i i-tego regionu!
                                 h[i, j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
                             }
                         }
@@ -101,8 +102,28 @@ namespace FractalCompression.Structure
 
                     if (minH > eps && d < dmax)
                     {
-                        //TODO:
-                        //create four new regions....
+                        int hx = (r.Vertices[1].X + r.Vertices[2].X) / 2;
+                        int hy = (r.Vertices[2].Y + r.Vertices[3].Y) / 2;
+
+                        Point pN = new Point(hx, r.Vertices[1].Y);
+                        Point pE = new Point(r.Vertices[3].X, hy);
+                        Point pS = new Point(hx, r.Vertices[0].Y);
+                        Point pW = new Point(r.Vertices[0].X, hy);
+                        Point pC = new Point(hx, hy);
+
+                        squeue2.Enqueue(new Region(r.Vertices[0], pS, pC, pW));
+                        squeue2.Enqueue(new Region(pS, pC, pE, r.Vertices[3]));
+                        squeue2.Enqueue(new Region(pC, pN, r.Vertices[2], pE));
+                        squeue2.Enqueue(new Region(pW, r.Vertices[1], pN, pC));
+
+                        iqueue.Enqueue(pN);
+                        iqueue.Enqueue(pE);
+                        iqueue.Enqueue(pS);
+                        iqueue.Enqueue(pW);
+                        iqueue.Enqueue(pC);
+
+                        //...
+                        //aqueue.e
                     }
                     else
                     {
@@ -136,6 +157,16 @@ namespace FractalCompression.Structure
         public Queue<double> Cqueue
         {
             get { return cqueue;}
+        }
+
+        public int BigDelta
+        {
+            get { return bigDelta; }
+        }
+
+        public int SmallDelta
+        {
+            get { return smallDelta; }
         }
     }
 }
