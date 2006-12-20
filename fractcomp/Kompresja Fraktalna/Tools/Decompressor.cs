@@ -12,6 +12,9 @@ namespace FractalCompression.Tools
         //nie wiem co zawiera ta lista, wiec jak bedziesz wiedzial to bede
         //wdzieczny za zmiane
         List<int> addresses;
+        //wielkosci kolejnych regionow, najczesciej bede te same, ale
+        //jak dojdzie koniecznosc podzialu regionu na podregiony to musze o tym wiedziec
+        List<int> regionSizes;
         int smallDelta;
         int a;
         int width;
@@ -20,7 +23,7 @@ namespace FractalCompression.Tools
 
         public Decompressor(List<double> contrctivtyFactors,
             List<MappedPoint> interpolationPoints, List<int> addresses,
-            int smallDelta, int a, int width, int height)
+            List<int> regionSizes,int smallDelta, int a, int width, int height)
         {
             this.contrctivtyFactors = contrctivtyFactors;
             this.interpolationPoints = interpolationPoints;
@@ -29,6 +32,7 @@ namespace FractalCompression.Tools
             this.smallDelta = smallDelta;
             this.width = width;
             this.height = height;
+            this.regionSizes = regionSizes;
         }
 
         public Bitmap DecompressImage()
@@ -48,7 +52,10 @@ namespace FractalCompression.Tools
                         if (j != 0)
                         {
                             double contractivityFactor = contrctivtyFactors[j];
-                            //to be continued..
+                            for (int h = 0; h < regionSizes[j]; h++)
+                            {
+
+                            }
                         }
                     }
                 }
