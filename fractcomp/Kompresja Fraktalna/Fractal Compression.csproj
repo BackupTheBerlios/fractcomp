@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="Structure\Region.cs" />
     <Compile Include="Tools\Compressor.cs" />
+    <Compile Include="Tools\CompResult.cs" />
     <Compile Include="Tools\Decompressor.cs" />
     <Compile Include="Tools\Gauss.cs" />
     <Compile Include="Tools\MappedPoint.cs" />

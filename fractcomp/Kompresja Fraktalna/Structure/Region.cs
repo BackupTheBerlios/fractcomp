@@ -9,6 +9,17 @@ namespace FractalCompression.Structure
     {
         private Point[] vertices;
         private double[,] mappedVals;
+        private int x, y;
+
+        public int Y
+        {
+            get { return y; }
+        }
+
+        public int X
+        {
+            get { return x; }
+        }
 
         public Point[] Vertices
         {

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Drawing;
 
 using FractalCompression.Structure;
@@ -12,10 +15,11 @@ namespace FractalCompression.Tools
         private int bigDelta, smallDelta, a, eps, dmax, d;
 
         private Queue<FractalCompression.Structure.Region> squeue;
-        private Queue<Point> iqueue;
+        private Queue<Point3D> iqueue;
 
         private Queue<double> cqueue;               //contractivity factors
-        private Queue<Point3D> aqueue;              //addresses domain's i,j, minHij
+        //private Queue<Point3D> aqueue;              //addresses domain's i,j, minHij
+        private Queue<int> aqueue;                     //addresses domain's
         private Queue<FractalCompression.Structure.Region> squeue2;
 
         private double[,] h;
@@ -39,18 +43,19 @@ namespace FractalCompression.Tools
             foreach (FractalCompression.Structure.Region r in regions)
                 squeue.Enqueue(r);
 
-            iqueue = new Queue<Point>();
+            iqueue = new Queue<Point3D>();
             foreach (Point p in interpolationPoints)
-                iqueue.Enqueue(p);
+                iqueue.Enqueue(new Point3D(p.X, p.Y, bitmap.GetPixel(p.X,p.Y).ToArgb()));
 
-            aqueue = new Queue<Point3D>();
+            //aqueue = new Queue<Point3D>();
+            aqueue = new Queue<int>();
             cqueue = new Queue<double>();
             squeue2 = new Queue<FractalCompression.Structure.Region>();
 
             d = 1;
             this.bitmap = bitmap;
 
-            this.h = new double[domains.GetUpperBound(0), domains.GetUpperBound(1)];
+            this.h = new double[regions.Length, domains.Length];
         }
 
         public void Compress()
@@ -58,9 +63,13 @@ namespace FractalCompression.Tools
             do
             {
                 double s = 0;
+                int rCount = -1;
+                double[] nh = new double[domains.Length];
                 while (squeue.Count != 0)
                 {
                     FractalCompression.Structure.Region r = squeue.Dequeue();
+                    rCount++;
+
                     for (int i = 0; i < domains.GetUpperBound(0); i++)
                         for (int j = 0; j < domains.GetUpperBound(1); j++)
                         {
@@ -82,12 +91,15 @@ namespace FractalCompression.Tools
                                     bitmap.GetPixel(pk.X + smallDelta, pk.Y).ToArgb(), bitmap.GetPixel(pk.X + smallDelta, pk.Y + smallDelta).ToArgb());
 
                                 FractalCompression.Structure.Region mappedRegion = POTools.MapDomainToRegion(dom, r, bitmap, mapper, a);
+                                
                                 // to jest Ÿle - hij odnosi siê do j-tej domeny i i-tego regionu!
-                                h[i, j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
+                                //h[i, j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
+
+                                nh[domains.GetUpperBound(0) * i + j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
                             }
                         }
 
-                    int minHi = 0, minHj = 0;
+                    /*int minHi = 0, minHj = 0;
                     double minH = h[minHi, minHj];
                     for (int i = 0; i < h.GetUpperBound(0); i++)
                         for (int j = 0; j < h.GetUpperBound(1); j++)
@@ -96,6 +108,18 @@ namespace FractalCompression.Tools
                             {
                                 minH = h[minHi, minHj];
                                 minHi = i;
+                                minHj = j;
+                            }
+                        }
+                     */
+
+                    int minHj = 0;
+                    double minH = nh[0];
+                    for (int j = 0; j < nh.Length; j++)
+                        {
+                            if (nh[minHj] < minH)
+                            {
+                                minH = nh[minHj];
                                 minHj = j;
                             }
                         }
@@ -116,19 +140,25 @@ namespace FractalCompression.Tools
                         squeue2.Enqueue(new FractalCompression.Structure.Region(pC, pN, r.Vertices[2], pE));
                         squeue2.Enqueue(new FractalCompression.Structure.Region(pW, r.Vertices[1], pN, pC));
 
-                        iqueue.Enqueue(pN);
+                        /*iqueue.Enqueue(pN);
                         iqueue.Enqueue(pE);
                         iqueue.Enqueue(pS);
                         iqueue.Enqueue(pW);
-                        iqueue.Enqueue(pC);
+                        iqueue.Enqueue(pC);*/
 
-                        //...
-                        //aqueue.e
+                        iqueue.Enqueue(new Point3D(pN.X, pN.Y, bitmap.GetPixel(pN.X, pN.Y).ToArgb()));
+                        iqueue.Enqueue(new Point3D(pE.X, pE.Y, bitmap.GetPixel(pE.X, pE.Y).ToArgb()));
+                        iqueue.Enqueue(new Point3D(pS.X, pS.Y, bitmap.GetPixel(pS.X, pS.Y).ToArgb()));
+                        iqueue.Enqueue(new Point3D(pW.X, pW.Y, bitmap.GetPixel(pW.X, pW.Y).ToArgb()));
+                        iqueue.Enqueue(new Point3D(pC.X, pC.Y, bitmap.GetPixel(pC.X, pC.Y).ToArgb()));
+
+                        aqueue.Enqueue(-1);
                     }
                     else
                     {
                         //store j with the min distance inside aqueue and s inside cqueue
-                        aqueue.Enqueue(new Point3D(minHi, minHj, minH));
+                        //aqueue.Enqueue(new Point3D(minHi, minHj, minH));
+                        aqueue.Enqueue(minHj);
                         cqueue.Enqueue(s);
                     }
                 }
@@ -143,13 +173,27 @@ namespace FractalCompression.Tools
             //store dmax, smallDelta, bigDelta, cqueue, iqueue, aqueue
         }
 
-        public Queue<Point> Iqueue
+        public void SaveToFile(String filepath)
+        {
+            CompResult results = new CompResult(aqueue, cqueue, iqueue, bigDelta, smallDelta, dmax);
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream fs = new FileStream(filepath, FileMode.Create);
+            bf.Serialize(fs, results);
+            fs.Close();
+        }
+
+        public Queue<Point3D> Iqueue
         {
             get { return iqueue; }
         }
 
 
-        public Queue<Point3D> Aqueue
+        /*public Queue<Point3D> Aqueue
+        {
+            get { return aqueue; }
+        }*/
+
+        public Queue<int> Aqueue
         {
             get { return aqueue; }
         }
