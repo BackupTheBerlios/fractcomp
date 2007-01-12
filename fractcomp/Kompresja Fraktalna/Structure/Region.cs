@@ -8,18 +8,7 @@ namespace FractalCompression.Structure
     class Region
     {
         private Point[] vertices;
-        private double[,] mappedVals;
-        private int x, y;
-
-        public int Y
-        {
-            get { return y; }
-        }
-
-        public int X
-        {
-            get { return x; }
-        }
+        private double[,] mappedVals;       
 
         public Point[] Vertices
         {
@@ -53,6 +42,18 @@ namespace FractalCompression.Structure
                 {
                     throw new System.IndexOutOfRangeException();
                 }
+            }
+        }
+
+        public double this[Point p]  //indexer
+        {
+            get
+            {
+                return this[p.X, p.Y];
+            }
+            set
+            {
+                this[p.X, p.Y] = value;
             }
         }
 

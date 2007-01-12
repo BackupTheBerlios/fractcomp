@@ -2,37 +2,35 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using FractalCompression.Structure;
 
 namespace FractalCompression.Tools
 {
     class Decompressor
     {
-        List<double> contrctivtyFactors;
-        List<MappedPoint> interpolationPoints;
+        List<double> contractivityFactors;
+        List<SimpledRegion> regions;
         //nie wiem co zawiera ta lista, wiec jak bedziesz wiedzial to bede
         //wdzieczny za zmiane
         List<int> addresses;
-        //wielkosci kolejnych regionow, najczesciej bede te same, ale
-        //jak dojdzie koniecznosc podzialu regionu na podregiony to musze o tym wiedziec
-        List<int> regionSizes;
         int smallDelta;
         int a;
         int width;
         int height;
-        int dmax = 10;
+        int dMax;
 
         public Decompressor(List<double> contrctivtyFactors,
-            List<MappedPoint> interpolationPoints, List<int> addresses,
-            List<int> regionSizes,int smallDelta, int a, int width, int height)
+            List<SimpledRegion> regions, List<int> addresses,
+            int smallDelta, int a, int width, int height, int dMax)
         {
-            this.contrctivtyFactors = contrctivtyFactors;
-            this.interpolationPoints = interpolationPoints;
+            this.contractivityFactors = contrctivtyFactors;
+            this.regions = regions;
             this.addresses = addresses;
             this.a = a;
             this.smallDelta = smallDelta;
             this.width = width;
             this.height = height;
-            this.regionSizes = regionSizes;
+            this.dMax = dMax;
         }
 
         public Bitmap DecompressImage()
@@ -40,19 +38,27 @@ namespace FractalCompression.Tools
             int steps = (int)Math.Truncate(Math.Log(smallDelta, 2) / Math.Log(a, 2));
             Bitmap bit = new Bitmap(width, height, 
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            foreach (MappedPoint mp in interpolationPoints)
-                bit.SetPixel(mp.X, mp.Y, Color.FromArgb((int)mp.Val, (int)mp.Val, (int)mp.Val));
+
+            foreach (SimpledRegion sr in regions)
+            {
+                for (int i = 0; i < sr.Vertices.Length; i++)
+                    bit.SetPixel(sr.Vertices[i].X, sr.Vertices[i].Y,
+                        Color.FromArgb(sr.Values[i],
+                        sr.Values[i],
+                        sr.Values[i]));
+            }
             for (int t = 0; t < steps; t++)
             {
-                for (int i = 0; i < Math.Min(steps, dmax); i++)
+                for (int i = 0; i < Math.Min(steps, dMax); i++)
                 {
-                    for (int j = 0; j < interpolationPoints.Count; j++)
+                    for (int j = 0; j < regions.Count; j++)
                     {
                         int coresspondingDomain = addresses[j];
-                        if (j != 0)
+                        
+                        if (j != -1)
                         {
-                            double contractivityFactor = contrctivtyFactors[j];
-                            for (int h = 0; h < regionSizes[j]; h++)
+                            double contractivityFactor = contractivityFactors[j];
+                            for (int h = 0; h < 1 ; h++)
                             {
 
                             }

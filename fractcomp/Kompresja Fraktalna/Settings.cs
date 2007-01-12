@@ -29,6 +29,7 @@ namespace FractalCompression
             {
                 this.errorProvider1.SetError(this.regionTextBox, "");
                 Properties.Settings.Default.bigDelta = bigDelta;
+                a = (int)Math.Sqrt(a);
                 Properties.Settings.Default.a = a;
                 Properties.Settings.Default.smallDelta = bigDelta / a;
                 Properties.Settings.Default.Save();
