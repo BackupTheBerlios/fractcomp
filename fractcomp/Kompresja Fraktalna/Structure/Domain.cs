@@ -14,18 +14,7 @@ namespace FractalCompression.Structure
         private int bigDelta;
         private int smallDelta;
         private int a;
-        private int x, y;
-
-        public int Y
-        {
-            get { return y; }
-        }
-
-        public int X
-        {
-            get { return x; }
-        }
-
+        
         public Point[] Vertices
         {
             get { return vertices; }

@@ -13,7 +13,7 @@ namespace FractalCompression.Tools
         //nie wiem co zawiera ta lista, wiec jak bedziesz wiedzial to bede
         //wdzieczny za zmiane
         List<int> addresses;
-        int smallDelta;
+        int smallDelta, bigDelta;
         int a;
         int width;
         int height;
@@ -21,13 +21,14 @@ namespace FractalCompression.Tools
 
         public Decompressor(List<double> contrctivtyFactors,
             List<SimpledRegion> regions, List<int> addresses,
-            int smallDelta, int a, int width, int height, int dMax)
+            int smallDelta, int bigDelta, int a, int width, int height, int dMax)
         {
             this.contractivityFactors = contrctivtyFactors;
             this.regions = regions;
             this.addresses = addresses;
             this.a = a;
             this.smallDelta = smallDelta;
+            this.bigDelta = bigDelta;
             this.width = width;
             this.height = height;
             this.dMax = dMax;
