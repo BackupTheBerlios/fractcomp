@@ -8,23 +8,22 @@ namespace FractalCompression.Tools
 {
     class Decompressor
     {
-        List<double> contractivityFactors;
-        List<SimpledRegion> regions;
-        //nie wiem co zawiera ta lista, wiec jak bedziesz wiedzial to bede
-        //wdzieczny za zmiane
-        List<int> addresses;
-        int smallDelta, bigDelta;
-        int a;
-        int width;
-        int height;
-        int dMax;
+        private List<double> contractivityFactors;
+        private List<MappedPoint> interpolationPoints;
+        private List<int> addresses;
+        private int smallDelta, bigDelta;
+        private int a;
+        private int width;
+        private int height;
+        private int dMax;
+        private int realSize;
 
         public Decompressor(List<double> contrctivtyFactors,
-            List<SimpledRegion> regions, List<int> addresses,
+            List<MappedPoint> interpolationPoints, List<int> addresses,
             int smallDelta, int bigDelta, int a, int width, int height, int dMax)
         {
             this.contractivityFactors = contrctivtyFactors;
-            this.regions = regions;
+            this.interpolationPoints = interpolationPoints;
             this.addresses = addresses;
             this.a = a;
             this.smallDelta = smallDelta;
@@ -32,6 +31,8 @@ namespace FractalCompression.Tools
             this.width = width;
             this.height = height;
             this.dMax = dMax;
+            this.realSize = width / smallDelta;
+    
         }
 
         public Bitmap DecompressImage()
@@ -40,34 +41,90 @@ namespace FractalCompression.Tools
             Bitmap bit = new Bitmap(width, height, 
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-            foreach (SimpledRegion sr in regions)
+            foreach (MappedPoint p in interpolationPoints)
             {
-                for (int i = 0; i < sr.Vertices.Length; i++)
-                    bit.SetPixel(sr.Vertices[i].X, sr.Vertices[i].Y,
-                        Color.FromArgb(sr.Values[i],
-                        sr.Values[i],
-                        sr.Values[i]));
+                bit.SetPixel(p.X, p.Y,
+                        Color.FromArgb((int)p.Val,
+                        (int)p.Val,
+                        (int)p.Val));
             }
             for (int t = 0; t < steps; t++)
             {
                 for (int i = 0; i < Math.Min(steps, dMax); i++)
                 {
-                    for (int j = 0; j < regions.Count; j++)
+                    for (int j = 0; j < this.interpolationPoints.Count ; j+=4)
                     {
-                        int coresspondingDomain = addresses[j];
-                        
+                        int coresspondingDomain = addresses[j / 4];
                         if (j != -1)
                         {
-                            double contractivityFactor = contractivityFactors[j];
-                            for (int h = 0; h < 1 ; h++)
-                            {
-
-                            }
+                            double contractivityFactor = contractivityFactors[j / 4];
+                            MyDomain md = GetDomain(coresspondingDomain);
+                            Mapper mapper = new Mapper(contractivityFactor,
+                                md.Domain.Vertices[0], interpolationPoints[j],
+                                this.smallDelta, this.bigDelta, md.Vals[0],
+                                md.Vals[1], md.Vals[2], md.Vals[3],
+                                (int)interpolationPoints[j].Val,
+                                (int)interpolationPoints[j + 1].Val,
+                                (int)interpolationPoints[j + 2].Val,
+                                (int)interpolationPoints[j + 3].Val);
+                          
                         }
                     }
                 }
             }
             return bit;
+        }
+
+        private MyDomain GetDomain(int address)
+        {
+            int numberOfDomainInWidth = this.width / this.bigDelta;
+            int numberOfDomainInHeight = this.height / this.bigDelta;
+            int domainX = (address / numberOfDomainInWidth) * this.bigDelta;
+            int domainY = (address % numberOfDomainInHeight) * this.bigDelta;
+            MyDomain md = null;
+            for (int i = 0; i < this.interpolationPoints.Count; i++)
+            {
+                if (domainX == interpolationPoints[i].X &&
+                    domainY == interpolationPoints[i].Y)
+                {
+                    int[] vals = new int[4];
+                    Domain d = new Domain(interpolationPoints[i],
+                        interpolationPoints[i + 1],
+                        interpolationPoints[i + 2],
+                        interpolationPoints[i + 3], this.a);
+                    vals[0] = (int)interpolationPoints[i].Val;
+                    vals[1] = (int)interpolationPoints[i + 1].Val;
+                    vals[2] = (int)interpolationPoints[i + 2].Val;
+                    vals[3] = (int)interpolationPoints[i + 3].Val;
+                    md = new MyDomain(d, vals);
+                    break;
+                }
+                i += 4;
+            }
+            return md;
+        }
+
+        private class MyDomain
+        {
+            private int[] vals = new int[4];
+            private Domain domain;
+
+            public Domain Domain
+            {
+                get { return domain; }
+            }
+
+            public int[] Vals
+            {
+                get { return vals; }
+            }
+
+            public MyDomain(Domain domain, int[] vals)
+            {
+                this.domain = domain;
+                this.vals = vals;
+            }
+
         }
     }
 }

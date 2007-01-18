@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 
 namespace FractalCompression.Tools
 {
@@ -24,7 +25,11 @@ namespace FractalCompression.Tools
             get { return x; }
         }
 
-        
+        static public implicit operator Point(MappedPoint mp)
+        {
+            return new Point(mp.X, mp.Y);
+        }
+
 
         public MappedPoint(int x, int y, double val)
         {

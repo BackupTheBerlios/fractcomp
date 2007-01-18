@@ -80,7 +80,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Structure\Region.cs" />
-    <Compile Include="Structure\SimpledRegion.cs" />
     <Compile Include="Tools\Compressor.cs" />
     <Compile Include="Tools\CompResult.cs" />
     <Compile Include="Tools\Decompressor.cs" />

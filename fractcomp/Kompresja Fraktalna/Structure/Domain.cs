@@ -11,8 +11,6 @@ namespace FractalCompression.Structure
     {
         //0 - (x0,y0)  1 - (x0,y1), 2 - (x1,y1), 3 - (x1, y0)
         private Point[] vertices;
-        private int bigDelta;
-        private int smallDelta;
         private int a;
         
         public Point[] Vertices
@@ -26,7 +24,7 @@ namespace FractalCompression.Structure
 
         public int Size
         {
-            get { return bigDelta; }
+            get { return vertices[3].X - vertices[0].X; }
         }
 
         public Domain()
@@ -41,9 +39,7 @@ namespace FractalCompression.Structure
             vertices[1] = p1;
             vertices[2] = p2;
             vertices[3] = p3;
-            bigDelta = vertices[3].X - vertices[0].X;
             this.a = a;
-            this.smallDelta = bigDelta / a;
         }
 
         public Domain(Point[] vertices, int a)
@@ -51,9 +47,7 @@ namespace FractalCompression.Structure
             if (vertices == null || vertices.Length != 4)
                 throw new Exception("Invalid argument");
             this.vertices = vertices;
-            bigDelta = vertices[3].X - vertices[0].X;
             this.a = a;
-            this.smallDelta = bigDelta / a;
         }
 
         public double Left(int v, Bitmap bitmap)

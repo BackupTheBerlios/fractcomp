@@ -79,9 +79,9 @@ namespace FractalCompression
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(15, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(117, 13);
+            this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Set number of Domains";
+            this.label1.Text = "Set size of Domain";
             // 
             // label2
             // 
