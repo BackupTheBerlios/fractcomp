@@ -67,7 +67,18 @@ namespace FractalCompression.Tools
                                 (int)interpolationPoints[j + 1].Val,
                                 (int)interpolationPoints[j + 2].Val,
                                 (int)interpolationPoints[j + 3].Val);
-                          
+                            Point prevPoint = md.Domain.Vertices[0];
+                            int prevVal = md.Vals[0];
+                            for (int k = 0; k < md.Domain.Size * md.Domain.Size; k++)
+                            {
+                                MappedPoint newPoint = mapper.MapPoint(prevPoint.X,
+                                    prevPoint.Y, (double)prevVal);
+                                bit.SetPixel(newPoint.X, newPoint.Y,
+                                    Color.FromArgb((int)newPoint.Val,
+                                    (int)newPoint.Val, (int)newPoint.Val));
+                                prevPoint = newPoint;
+                                prevVal = (int)newPoint.Val;
+                            }
                         }
                     }
                 }
