@@ -53,7 +53,7 @@ namespace FractalCompression
             }
         }*/
 
-        private void PrepareStructuresTest(Bitmap bitmap, int bigDelta, int a)
+        private Bitmap CompressionTest(Bitmap bitmap, int bigDelta, int a)
         {
             Console.WriteLine("bmp size: {0}x{1}, bigDelta={2}, a={3}", bitmap.Width, bitmap.Height, bigDelta,a);
             FractalCompression.Structure.Region[,] regions = null;
@@ -66,9 +66,24 @@ namespace FractalCompression
             //POTools.PrintDomains(domains);
             //POTools.PrintRegions(regions);
                
+            string filepath =@"C:\Documents and Settings\Mroczek\Pulpit\myfile.nofc";
             Compressor compressor = new Compressor(bigDelta, a, 10,3, domains, regions, intrpList, bitmap);
+            Console.WriteLine("Compression started...");
             compressor.Compress();
-            compressor.SaveToFile("myfile.nofc");
+            Console.WriteLine("Image compressed, saving to file...");
+            compressor.SaveToFile(filepath);
+
+            Console.WriteLine("Reading file before decompression...");
+            CompResult cr = POTools.DeserializeCompResult(filepath);
+            Console.WriteLine("Preparing to decompression...");
+            List<double> cfactors = new List<double>(cr.Cqueue);
+            List<MappedPoint> interpPoints= new List<MappedPoint>(cr.Iqueue);
+            List<int> addresses = new List<int>(cr.Aqueue);
+            Decompressor decompressor = new Decompressor(cfactors, interpPoints, addresses,
+                cr.SmallDelta, cr.BigDelta, cr.A, cr.ImageWidth, cr.ImageHeight, cr.DMax);
+
+            Console.WriteLine("Decompressing image...");
+            return decompressor.DecompressImage();
         }
 
         
@@ -91,9 +106,9 @@ namespace FractalCompression
                 this.bitmap = MNTools.RescaleBitmap(
                     Image.FromFile(openFileDialog1.FileName));
                 this.originallPictureBox.Image = bitmap;
-                this.compresedPictureBox.Image = bitmap;
+                //this.compresedPictureBox.Image = bitmap;
 
-                PrepareStructuresTest(bitmap,Properties.Settings.Default.bigDelta, Properties.Settings.Default.a);
+                this.compresedPictureBox.Image = CompressionTest(bitmap,Properties.Settings.Default.bigDelta, Properties.Settings.Default.a);
             }
         }
 

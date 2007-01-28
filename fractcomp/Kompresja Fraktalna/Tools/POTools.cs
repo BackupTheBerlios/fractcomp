@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using FractalCompression.Structure;
 
@@ -272,6 +275,15 @@ namespace FractalCompression.Tools
                     Point[] v = regions[i, j].Vertices;
                     Console.WriteLine("({0}, {1}, {2}, {3})", v[0], v[1], v[2], v[3]);
                 }
+        }
+
+        public static CompResult DeserializeCompResult(string filepath)
+        {
+            FileStream fs = new FileStream(filepath, FileMode.Open);
+            BinaryFormatter bf = new BinaryFormatter();
+            CompResult result = (CompResult)bf.Deserialize(fs);
+            fs.Close();
+            return result;
         }
     }
 }

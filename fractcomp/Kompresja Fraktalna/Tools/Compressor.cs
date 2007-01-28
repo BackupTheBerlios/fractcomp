@@ -175,7 +175,7 @@ namespace FractalCompression.Tools
 
         public void SaveToFile(String filepath)
         {
-            CompResult results = new CompResult(aqueue, cqueue, iqueue, bigDelta, smallDelta, dmax);
+            CompResult results = new CompResult(aqueue, cqueue, iqueue, bigDelta, smallDelta, a, dmax,bitmap.Width,bitmap.Height);
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fs = new FileStream(filepath, FileMode.Create);
             bf.Serialize(fs, results);
