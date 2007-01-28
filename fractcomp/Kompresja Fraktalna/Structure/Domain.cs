@@ -46,7 +46,9 @@ namespace FractalCompression.Structure
         {
             if (vertices == null || vertices.Length != 4)
                 throw new Exception("Invalid argument");
-            this.vertices = vertices;
+            this.vertices = new Point[4];
+            for (int i = 0; i < vertices.Length; i++)
+                this.vertices[i] = vertices[i];
             this.a = a;
         }
 

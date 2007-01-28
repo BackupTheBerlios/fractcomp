@@ -9,12 +9,13 @@ namespace FractalCompression.Tools
     class CompResult
     {
         private int bigDelta, smallDelta, dmax;
+        private int imageWidth, imageHeight;
 
-        private Queue<Point3D> iqueue;
-        private Queue<double> cqueue;               //contractivity factors
-        private Queue<int> aqueue;                     //addresses domain's
+        private Queue<MappedPoint> iqueue;
+        private Queue<double> cqueue;                   //contractivity factors
+        private Queue<int> aqueue;                      //addresses domain's
 
-        public CompResult(Queue<int> aqueue, Queue<double> cqueue, Queue<Point3D> iqueue, int bigDelta, int smallDelta, int dmax)
+        public CompResult(Queue<int> aqueue, Queue<double> cqueue, Queue<MappedPoint> iqueue, int bigDelta, int smallDelta, int dmax)
         {
             this.aqueue = aqueue;
             this.cqueue = cqueue;
@@ -25,7 +26,7 @@ namespace FractalCompression.Tools
             this.dmax = dmax;
         }
 
-        public Queue<Point3D> Iqueue
+        public Queue<MappedPoint> Iqueue
         {
             get { return iqueue; }
         }
@@ -53,6 +54,16 @@ namespace FractalCompression.Tools
         public int SmallDelta
         {
             get { return smallDelta; }
+        }
+
+        public int ImageWidth
+        {
+            get { return imageWidth; }
+        }
+
+        public int ImageHeight
+        {
+            get { return imageHeight; }
         }
     }
 }

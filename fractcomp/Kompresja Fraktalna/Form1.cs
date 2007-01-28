@@ -38,6 +38,42 @@ namespace FractalCompression
 
         }
 
+        /*private void ComputeInterpolationPointsTest0(Bitmap bitmap, int domainsInRow, int a)
+        {
+            Console.WriteLine("bmp size: {0}x{1}", bitmap.Width, bitmap.Height);
+            List<MappedPoint> intrpList = POTools.ComputeInterpolationPoints(bitmap, domainsInRow, a);
+            Console.WriteLine("interpolation points: " + intrpList.Count);
+            Console.WriteLine();
+            for (int i = 0; i < intrpList.Count; i++)
+            {
+                Console.Write("({0},{1}), ", intrpList[i].X, intrpList[i].Y);
+                //Console.Write(intrpList[i].X + ", " + intrpList[i].Y + ";  ");
+                if ((i + 1) % 4 == 0)
+                    Console.WriteLine();
+            }
+        }*/
+
+        private void PrepareStructuresTest(Bitmap bitmap, int bigDelta, int a)
+        {
+            Console.WriteLine("bmp size: {0}x{1}, bigDelta={2}, a={3}", bitmap.Width, bitmap.Height, bigDelta,a);
+            FractalCompression.Structure.Region[,] regions = null;
+            FractalCompression.Structure.Domain[,] domains = null;
+            List<MappedPoint> intrpList = null;
+            //List<MappedPoint> intrpList = POTools.PrepareRegions(bitmap, bigDelta, a, out regions);
+            POTools.PrepareStructures(bitmap, bigDelta, a, out regions, out domains, out intrpList);
+
+            //POTools.PrintInterpolationPoints(intrpList);
+            //POTools.PrintDomains(domains);
+            //POTools.PrintRegions(regions);
+               
+            Compressor compressor = new Compressor(bigDelta, a, 10,3, domains, regions, intrpList, bitmap);
+            compressor.Compress();
+            compressor.SaveToFile("myfile.nofc");
+        }
+
+        
+
+
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -56,7 +92,9 @@ namespace FractalCompression
                     Image.FromFile(openFileDialog1.FileName));
                 this.originallPictureBox.Image = bitmap;
                 this.compresedPictureBox.Image = bitmap;
-                 }
+
+                PrepareStructuresTest(bitmap,Properties.Settings.Default.bigDelta, Properties.Settings.Default.a);
+            }
         }
 
         private void settinsToolStripMenuItem_Click(object sender, EventArgs e)

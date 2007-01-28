@@ -5,6 +5,7 @@ using System.Drawing;
 
 namespace FractalCompression.Tools
 {
+    [Serializable]
     class MappedPoint
     {
         private int x, y;
@@ -36,6 +37,18 @@ namespace FractalCompression.Tools
             this.x = x;
             this.y = y;
             this.val = val;
+        }
+
+        public int CompareTo(Object obj)
+        {
+            if (obj.GetType() != this.GetType())
+                throw new ArgumentException();
+
+            MappedPoint mp = (MappedPoint)obj;
+            if (this.X == mp.X && this.Y == mp.Y && this.Val == mp.Val)
+                return 0;
+
+            return this.Val.CompareTo(mp.Val);
         }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
+using FractalCompression.Tools;
+
 namespace FractalCompression.Structure
 {
     class Region
@@ -75,7 +77,7 @@ namespace FractalCompression.Structure
             vertices[1] = p1;
             vertices[2] = p2;
             vertices[3] = p3;
-            mappedVals = new double[p3.X - p0.X + 1, p1.Y - p0.Y + 1];
+            mappedVals = new double[p3.X - p0.X + 1, p0.Y - p1.Y + 1];
         }
 
         public Region(Point[] vertices)
@@ -83,7 +85,7 @@ namespace FractalCompression.Structure
             if (vertices == null || vertices.Length != 4)
                 throw new Exception("Invalid argument");
             this.vertices = vertices;
-            mappedVals = new double[vertices[3].X - vertices[0].X + 1, vertices[1].Y - vertices[0].Y + 1];
+            mappedVals = new double[vertices[3].X - vertices[0].X + 1, vertices[0].Y - vertices[1].Y + 1];
         }
 
         public Region(Point p0, Point p1, Point p2, Point p3, double[,] mappedVals)
@@ -102,6 +104,18 @@ namespace FractalCompression.Structure
                 throw new Exception("Invalid argument");
             this.vertices = vertices;
             this.mappedVals = mappedVals;
+        }
+
+        public Region(MappedPoint[] points)
+        {
+            if (points == null || points.Length != 4)
+                throw new Exception("Invalid argument");
+
+            vertices = new Point[4];
+            for (int i = 0; i < 4; ++i)
+                vertices[i] = new Point(points[i].X, points[i].Y);
+
+            mappedVals = new double[points[3].X - points[0].X + 1, points[0].Y - points[1].Y + 1];
         }
     }
 }

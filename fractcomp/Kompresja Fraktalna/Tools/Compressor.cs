@@ -15,7 +15,7 @@ namespace FractalCompression.Tools
         private int bigDelta, smallDelta, a, eps, dmax, d;
 
         private Queue<FractalCompression.Structure.Region> squeue;
-        private Queue<Point3D> iqueue;
+        private Queue<MappedPoint> iqueue;
 
         private Queue<double> cqueue;               //contractivity factors
         //private Queue<Point3D> aqueue;              //addresses domain's i,j, minHij
@@ -28,7 +28,7 @@ namespace FractalCompression.Tools
         private Bitmap bitmap;
 
 
-        public Compressor(int bigDelta, int a, int eps, int dmax, Domain[,] domains, FractalCompression.Structure.Region[,] regions, Point[,] interpolationPoints, Bitmap bitmap)
+        public Compressor(int bigDelta, int a, int eps, int dmax, Domain[,] domains, FractalCompression.Structure.Region[,] regions, List<MappedPoint> interpolationPoints, Bitmap bitmap)
         {
             this.bigDelta = bigDelta;
             this.a = a;
@@ -43,11 +43,11 @@ namespace FractalCompression.Tools
             foreach (FractalCompression.Structure.Region r in regions)
                 squeue.Enqueue(r);
 
-            iqueue = new Queue<Point3D>();
-            foreach (Point p in interpolationPoints)
-                iqueue.Enqueue(new Point3D(p.X, p.Y, bitmap.GetPixel(p.X,p.Y).ToArgb()));
+            iqueue = new Queue<MappedPoint>();
+            foreach (MappedPoint mp in interpolationPoints)
+                if (!iqueue.Contains(mp))
+                    iqueue.Enqueue(mp);
 
-            //aqueue = new Queue<Point3D>();
             aqueue = new Queue<int>();
             cqueue = new Queue<double>();
             squeue2 = new Queue<FractalCompression.Structure.Region>();
@@ -146,11 +146,11 @@ namespace FractalCompression.Tools
                         iqueue.Enqueue(pW);
                         iqueue.Enqueue(pC);*/
 
-                        iqueue.Enqueue(new Point3D(pN.X, pN.Y, bitmap.GetPixel(pN.X, pN.Y).ToArgb()));
-                        iqueue.Enqueue(new Point3D(pE.X, pE.Y, bitmap.GetPixel(pE.X, pE.Y).ToArgb()));
-                        iqueue.Enqueue(new Point3D(pS.X, pS.Y, bitmap.GetPixel(pS.X, pS.Y).ToArgb()));
-                        iqueue.Enqueue(new Point3D(pW.X, pW.Y, bitmap.GetPixel(pW.X, pW.Y).ToArgb()));
-                        iqueue.Enqueue(new Point3D(pC.X, pC.Y, bitmap.GetPixel(pC.X, pC.Y).ToArgb()));
+                        iqueue.Enqueue(new MappedPoint(pN.X, pN.Y, bitmap.GetPixel(pN.X, pN.Y).ToArgb()));
+                        iqueue.Enqueue(new MappedPoint(pE.X, pE.Y, bitmap.GetPixel(pE.X, pE.Y).ToArgb()));
+                        iqueue.Enqueue(new MappedPoint(pS.X, pS.Y, bitmap.GetPixel(pS.X, pS.Y).ToArgb()));
+                        iqueue.Enqueue(new MappedPoint(pW.X, pW.Y, bitmap.GetPixel(pW.X, pW.Y).ToArgb()));
+                        iqueue.Enqueue(new MappedPoint(pC.X, pC.Y, bitmap.GetPixel(pC.X, pC.Y).ToArgb()));
 
                         aqueue.Enqueue(-1);
                     }
@@ -182,7 +182,7 @@ namespace FractalCompression.Tools
             fs.Close();
         }
 
-        public Queue<Point3D> Iqueue
+        public Queue<MappedPoint> Iqueue
         {
             get { return iqueue; }
         }
