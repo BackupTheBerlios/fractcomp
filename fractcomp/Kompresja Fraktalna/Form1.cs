@@ -106,6 +106,8 @@ namespace FractalCompression
                 this.bitmap = MNTools.RescaleBitmap(
                     Image.FromFile(openFileDialog1.FileName));
                 this.originallPictureBox.Image = bitmap;
+                this.Text = this.originallPictureBox.Image.Width.ToString()
+                    + "x" + this.originallPictureBox.Image.Height.ToString();
                 //this.compresedPictureBox.Image = bitmap;
 
                 this.compresedPictureBox.Image = CompressionTest(bitmap,Properties.Settings.Default.bigDelta, Properties.Settings.Default.a);
@@ -115,7 +117,11 @@ namespace FractalCompression
         private void settinsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (set.ShowDialog() == DialogResult.OK && bitmap != null)
+            {
                 bitmap = MNTools.RescaleBitmap((Image)bitmap);
+                this.Text = this.originallPictureBox.Image.Width.ToString()
+                    + "x" + this.originallPictureBox.Image.Height.ToString();
+            }
             
 
         }
