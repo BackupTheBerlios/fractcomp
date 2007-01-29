@@ -119,11 +119,7 @@ namespace FractalCompression
             if (set.ShowDialog() == DialogResult.OK && bitmap != null)
             {
                 bitmap = MNTools.RescaleBitmap((Image)bitmap);
-                this.Text = this.originallPictureBox.Image.Width.ToString()
-                    + "x" + this.originallPictureBox.Image.Height.ToString();
             }
-            
-
         }
     }
 }

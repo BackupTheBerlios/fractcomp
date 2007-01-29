@@ -43,31 +43,31 @@ namespace FractalCompression
             int tempBigDelta;
             int tempA;
             if (Int32.TryParse(this.domainTextBox.Text, out tempBigDelta) &&
-                IsPowerOfTwo(tempBigDelta))
+                IsPowerOf(tempBigDelta, 2))
             {
                 this.errorProvider1.SetError(this.domainTextBox, "");
                 if (Int32.TryParse(this.regionTextBox.Text, out  tempA) &&
-                    IsPowerOfTwo(tempA) && tempA <= tempBigDelta/2)
+                    IsPowerOf(tempA, 4) && tempA <= tempBigDelta/2)
                 {
                     a = tempA;
                     bigDelta = tempBigDelta;
                     return true;
                 }
                 this.errorProvider1.SetError(this.regionTextBox, "Value is incorrect"
-                + "it should be power of 2, and be no bigger than Number of domains divide by 2");
+                + "it should be power of 4, and no bigger than Number of domains divide by 2");
                 return false;
             }
             this.errorProvider1.SetError(this.domainTextBox, "Value is incorrect, it should be power of 2");
             return false;
         }
 
-        private bool IsPowerOfTwo(int number)
+        private bool IsPowerOf(int number, int power)
         {
             if (number < 1)
                 throw new Exception("Invalid value");
             int val = 1;
             while (val < number)
-                val *= 2;
+                val *= power;
             if (val == number)
                 return true;
             return false;
@@ -77,6 +77,7 @@ namespace FractalCompression
         {
             bigDelta = Properties.Settings.Default.bigDelta;
             a = Properties.Settings.Default.a;
+            a = (int)Math.Pow(a, 2);
             this.domainTextBox.Text = bigDelta.ToString();
             this.regionTextBox.Text = a.ToString();
         }
