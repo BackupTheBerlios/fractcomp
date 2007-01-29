@@ -31,13 +31,16 @@ namespace FractalCompression
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.plikToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compressToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settinsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.originallPictureBox = new System.Windows.Forms.PictureBox();
             this.compresedPictureBox = new System.Windows.Forms.PictureBox();
+            this.imageOpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -62,7 +65,8 @@ namespace FractalCompression
             // 
             this.plikToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
-            this.saveToolStripMenuItem,
+            this.compressToolStripMenuItem1,
+            this.viewToolStripMenuItem2,
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.plikToolStripMenuItem.Name = "plikToolStripMenuItem";
@@ -72,25 +76,34 @@ namespace FractalCompression
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.openToolStripMenuItem.Text = "&Open";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.openToolStripMenuItem.Text = "&Open to compress";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
-            // saveToolStripMenuItem
+            // compressToolStripMenuItem1
             // 
-            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
-            this.saveToolStripMenuItem.Text = "&Save";
+            this.compressToolStripMenuItem1.Enabled = false;
+            this.compressToolStripMenuItem1.Name = "compressToolStripMenuItem1";
+            this.compressToolStripMenuItem1.Size = new System.Drawing.Size(184, 22);
+            this.compressToolStripMenuItem1.Text = "&Compress and save";
+            this.compressToolStripMenuItem1.Click += new System.EventHandler(this.toolStripMenuItem1_Click);
+            // 
+            // viewToolStripMenuItem2
+            // 
+            this.viewToolStripMenuItem2.Name = "viewToolStripMenuItem2";
+            this.viewToolStripMenuItem2.Size = new System.Drawing.Size(184, 22);
+            this.viewToolStripMenuItem2.Text = "&View compressed file";
+            this.viewToolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(108, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(181, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -143,9 +156,18 @@ namespace FractalCompression
             this.compresedPictureBox.TabIndex = 0;
             this.compresedPictureBox.TabStop = false;
             // 
+            // imageOpenFileDialog1
+            // 
+            this.imageOpenFileDialog1.Filter = "Image files | *.jpg; *.bmp";
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.DefaultExt = "nocf";
+            this.saveFileDialog1.Filter = "Fractal Compression Image | *.nocf";
+            // 
             // openFileDialog1
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
+            this.openFileDialog1.Filter = "Fractal Compression Image | *.nocf";
             // 
             // Form1
             // 
@@ -176,14 +198,17 @@ namespace FractalCompression
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem plikToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox originallPictureBox;
         private System.Windows.Forms.PictureBox compresedPictureBox;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.OpenFileDialog imageOpenFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem settinsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem compressToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem2;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 
