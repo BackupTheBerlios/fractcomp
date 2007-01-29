@@ -85,10 +85,10 @@ namespace FractalCompression.Tools
 
                                 Point pk = dom.Vertices[3], pi = r.Vertices[3];
                                 Mapper mapper = new Mapper(s, pk, pi, smallDelta, bigDelta,
-                                    bitmap.GetPixel(pk.X, pk.Y).ToArgb(), bitmap.GetPixel(pk.X + bigDelta, pk.Y).ToArgb(),
-                                    bitmap.GetPixel(pk.X + bigDelta, pk.Y).ToArgb(), bitmap.GetPixel(pk.X + bigDelta, pk.Y + bigDelta).ToArgb(),
-                                    bitmap.GetPixel(pk.X, pk.Y).ToArgb(), bitmap.GetPixel(pk.X + smallDelta, pk.Y).ToArgb(),
-                                    bitmap.GetPixel(pk.X + smallDelta, pk.Y).ToArgb(), bitmap.GetPixel(pk.X + smallDelta, pk.Y + smallDelta).ToArgb());
+                                    MNTools.GetBitmapValue(pk.X, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + bigDelta, pk.Y, bitmap),
+                                    MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y + bigDelta - 1, bitmap),
+                                    MNTools.GetBitmapValue(pk.X, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + smallDelta, pk.Y, bitmap),
+                                    MNTools.GetBitmapValue(pk.X + smallDelta - 1, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + smallDelta - 1, pk.Y + smallDelta - 1, bitmap));
 
                                 FractalCompression.Structure.Region mappedRegion = POTools.MapDomainToRegion(dom, r, bitmap, mapper, a);
                                 
@@ -146,11 +146,11 @@ namespace FractalCompression.Tools
                         iqueue.Enqueue(pW);
                         iqueue.Enqueue(pC);*/
 
-                        iqueue.Enqueue(new MappedPoint(pN.X, pN.Y, bitmap.GetPixel(pN.X, pN.Y).ToArgb()));
-                        iqueue.Enqueue(new MappedPoint(pE.X, pE.Y, bitmap.GetPixel(pE.X, pE.Y).ToArgb()));
-                        iqueue.Enqueue(new MappedPoint(pS.X, pS.Y, bitmap.GetPixel(pS.X, pS.Y).ToArgb()));
-                        iqueue.Enqueue(new MappedPoint(pW.X, pW.Y, bitmap.GetPixel(pW.X, pW.Y).ToArgb()));
-                        iqueue.Enqueue(new MappedPoint(pC.X, pC.Y, bitmap.GetPixel(pC.X, pC.Y).ToArgb()));
+                        iqueue.Enqueue(new MappedPoint(pN.X, pN.Y, MNTools.GetBitmapValue(pN.X, pN.Y, bitmap)));
+                        iqueue.Enqueue(new MappedPoint(pE.X, pE.Y, MNTools.GetBitmapValue(pE.X, pE.Y, bitmap)));
+                        iqueue.Enqueue(new MappedPoint(pS.X, pS.Y, MNTools.GetBitmapValue(pS.X, pS.Y, bitmap)));
+                        iqueue.Enqueue(new MappedPoint(pW.X, pW.Y, MNTools.GetBitmapValue(pW.X, pW.Y, bitmap)));
+                        iqueue.Enqueue(new MappedPoint(pC.X, pC.Y, MNTools.GetBitmapValue(pC.X, pC.Y, bitmap)));
 
                         aqueue.Enqueue(-1);
                     }

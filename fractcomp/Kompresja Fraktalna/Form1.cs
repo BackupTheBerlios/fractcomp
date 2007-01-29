@@ -110,7 +110,8 @@ namespace FractalCompression
                     + "x" + this.originallPictureBox.Image.Height.ToString();
                 //this.compresedPictureBox.Image = bitmap;
 
-                this.compresedPictureBox.Image = CompressionTest(bitmap,Properties.Settings.Default.bigDelta, Properties.Settings.Default.a);
+                this.compresedPictureBox.Image = CompressionTest(bitmap,Properties.Settings.Default.bigDelta, (int)Math.Sqrt(Properties.Settings.Default.a));
+                Console.WriteLine("Decompression done.");
             }
         }
 

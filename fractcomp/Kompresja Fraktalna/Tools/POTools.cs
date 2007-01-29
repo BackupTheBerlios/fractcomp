@@ -39,7 +39,8 @@ namespace FractalCompression.Tools
             double sip1j = MNTools.ComputeContractivityFactor(dip1j, region, bitmap);
             double sijp1 = MNTools.ComputeContractivityFactor(dijp1, region, bitmap);
 
-            for (int v = 1; v < a; v++)
+            //TODO: spr czy na pewno v=0 (a nie 1) i v< a-1 a nie (v<a)
+            for (int v = 0; v < a-1 ; v++)
             {
                 if (sij * dij.Right(v, bitmap) != sip1j * dip1j.Left(v, bitmap))
                     return false;
@@ -82,36 +83,36 @@ namespace FractalCompression.Tools
             double[,] mappedVals = new double [maxX,maxY];
 
             int x, y;
-            for (int i = 0; i < maxX; i++)
+            for (int i = 0; i < maxX; ++i)
             {
                 if (i == 0 )
                 {
-                    mappedVals[i, 0] = bitmap.GetPixel(region.Vertices[1].X,region.Vertices[1].Y).ToArgb();
-                    mappedVals[i, maxY - 1] = bitmap.GetPixel(region.Vertices[2].X, region.Vertices[2].Y).ToArgb();
-                    for (int j = 1; j < maxY - 1; j++)
+                    mappedVals[i, 0] = MNTools.GetBitmapValue(region.Vertices[1].X, region.Vertices[1].Y,bitmap);
+                    mappedVals[i, maxY - 1] = MNTools.GetBitmapValue(region.Vertices[2].X, region.Vertices[2].Y,bitmap);
+                    for (int j = 1; j < maxY - 1; ++j)
                     {
                         x = region.Vertices[1].X + i;
-                        y = region.Vertices[1].Y + (j + 1) + a;
-                        mappedVals[i, j] = mapper.MapPoint(x, y, bitmap.GetPixel(x, y).ToArgb()).Val;
+                        y = region.Vertices[1].Y + (j + 1) + a-1;
+                        mappedVals[i, j] = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y,bitmap)).Val;
                     }
                 }
                 else if  (i == maxX - 1)
                 {
-                    mappedVals[i, 0] = bitmap.GetPixel(region.Vertices[2].X, region.Vertices[2].Y).ToArgb();
-                    mappedVals[i, maxY - 1] = bitmap.GetPixel(region.Vertices[3].X, region.Vertices[3].Y).ToArgb();
-                    for (int j = 1; j < maxY - 1; j++)
+                    mappedVals[i, 0] = MNTools.GetBitmapValue(region.Vertices[2].X, region.Vertices[2].Y, bitmap);
+                    mappedVals[i, maxY - 1] = MNTools.GetBitmapValue(region.Vertices[3].X, region.Vertices[3].Y, bitmap);
+                    for (int j = 1; j < maxY - 1; ++j)
                     {
                         x = region.Vertices[1].X + i;
-                        y = region.Vertices[1].Y + (j + 1) + a;
-                        mappedVals[i, j] = mapper.MapPoint(x, y, bitmap.GetPixel(x, y).ToArgb()).Val;
+                        y = region.Vertices[1].Y + (j + 1) + a-1;
+                        mappedVals[i, j] = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap)).Val;
                     }
                 }
                 else
-                    for (int j = 0; j < maxY; j++)
+                    for (int j = 0; j < maxY; ++j)
                     {
                         x = region.Vertices[1].X + i;
-                        y = region.Vertices[1].Y  + j + a;
-                        mappedVals[i, j] = mapper.MapPoint(x, y, bitmap.GetPixel(x, y).ToArgb()).Val;
+                        y = region.Vertices[1].Y  + j + a-1;
+                        mappedVals[i, j] = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap)).Val;
                     }
             }
 
@@ -236,7 +237,7 @@ namespace FractalCompression.Tools
             if (y == bitmap.Height)
                 y = bitmap.Height - 1;
 
-            val = bitmap.GetPixel(x, y).ToArgb();
+            val = MNTools.GetBitmapValue(x, y, bitmap);
             MappedPoint mp = new MappedPoint(x, y, val);
             return mp;
         }
