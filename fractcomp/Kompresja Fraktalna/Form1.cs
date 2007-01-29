@@ -178,8 +178,9 @@ namespace FractalCompression
         {
             if (this.openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                String filePath = openFileDialog1.FileName;
                 this.compresedPictureBox.Image = Decompress(
-                  imageOpenFileDialog1.FileName);
+                  filePath);
             }
         }
     }
