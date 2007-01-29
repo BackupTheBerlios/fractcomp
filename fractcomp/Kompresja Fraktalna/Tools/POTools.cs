@@ -40,7 +40,7 @@ namespace FractalCompression.Tools
             double sijp1 = MNTools.ComputeContractivityFactor(dijp1, region, bitmap);
 
             //TODO: spr czy na pewno v=0 (a nie 1) i v< a-1 a nie (v<a)
-            for (int v = 0; v < a-1 ; v++)
+            for (int v = 0; v < a-2 ; v++)
             {
                 if (sij * dij.Right(v, bitmap) != sip1j * dip1j.Left(v, bitmap))
                     return false;
@@ -78,8 +78,8 @@ namespace FractalCompression.Tools
 
         public static FractalCompression.Structure.Region MapDomainToRegion(Domain domain, FractalCompression.Structure.Region region, Bitmap bitmap, Mapper mapper, int a)
         {
-            int maxX = region.MappedVals.GetUpperBound(0);
-            int maxY = region.MappedVals.GetUpperBound(1);
+            int maxX = region.MappedVals.GetUpperBound(0)+1;
+            int maxY = region.MappedVals.GetUpperBound(1)+1;
             double[,] mappedVals = new double [maxX,maxY];
 
             int x, y;
