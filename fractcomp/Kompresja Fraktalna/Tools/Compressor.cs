@@ -90,7 +90,7 @@ namespace FractalCompression.Tools
                                     MNTools.GetBitmapValue(pk.X, pk.Y + bigDelta - 1, bitmap), 
                                     MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y + bigDelta - 1, bitmap),
                                     MNTools.GetBitmapValue(pi.X, pi.Y, bitmap), 
-                                    MNTools.GetBitmapValue(pi.X + smallDelta, pi.Y, bitmap),
+                                    MNTools.GetBitmapValue(pi.X + smallDelta -1, pi.Y, bitmap),
                                     MNTools.GetBitmapValue(pi.X , pi.Y + smallDelta - 1, bitmap), 
                                     MNTools.GetBitmapValue(pi.X + smallDelta - 1, pi.Y + smallDelta - 1, bitmap));
 
