@@ -28,7 +28,7 @@ namespace FractalCompression.Tools
 
         public static bool CheckConditionOfContinuity(Domain[,] domains, int i, int j, int a, FractalCompression.Structure.Region region, Bitmap bitmap)
         {
-            if (i<0 || j<0 || (i > domains.GetUpperBound(0) - 1) || (j > domains.GetUpperBound(1) - 1))
+            if (i<0 || j<0 || (i > domains.GetUpperBound(0)) || (j > domains.GetUpperBound(1)))
                 throw new ArgumentException("Incorrect i or j values");
 
             Domain dij = domains[i, j];
@@ -40,7 +40,7 @@ namespace FractalCompression.Tools
             double sijp1 = MNTools.ComputeContractivityFactor(dijp1, region, bitmap);
 
             //TODO: spr czy na pewno v=0 (a nie 1) i v< a-1 a nie (v<a)
-            for (int v = 0; v < a-2 ; v++)
+            for (int v = 0; v < a-1 ; v++)
             {
                 if (sij * dij.Right(v, bitmap) != sip1j * dip1j.Left(v, bitmap))
                     return false;
@@ -78,88 +78,61 @@ namespace FractalCompression.Tools
 
         public static FractalCompression.Structure.Region MapDomainToRegion(Domain domain, FractalCompression.Structure.Region region, Bitmap bitmap, Mapper mapper, int a)
         {
-            int maxX = region.MappedVals.GetUpperBound(0)+1;
-            int maxY = region.MappedVals.GetUpperBound(1)+1;
-            double[,] mappedVals = new double [maxX,maxY];
+            //int smallDelta = region.Size + 1;
+            int bigDelta = domain.Size + 1;
+            int smallDelta = bigDelta / a;
+            int domainMaxX = domain.Vertices[3].X;
+            Point regCorner = region.Vertices[1];
+
+            double[,] mappedVals = new double [smallDelta, smallDelta];
 
             int x, y;
-            for (int i = 0; i < maxX; ++i)
+            for (int i = 0; i < bigDelta; i++)
             {
-                if (i == 0 )
+                y = domain.Vertices[1].Y + i;
+                x = domain.Vertices[1].X;
+                if (i == 0)
                 {
-                    mappedVals[i, 0] = MNTools.GetBitmapValue(region.Vertices[1].X, region.Vertices[1].Y,bitmap);
-                    mappedVals[i, maxY - 1] = MNTools.GetBitmapValue(region.Vertices[2].X, region.Vertices[2].Y,bitmap);
-                    for (int j = 1; j < maxY - 1; ++j)
+                    mappedVals[0, 0] = MNTools.GetBitmapValue(region.Vertices[1].X, region.Vertices[1].Y, bitmap);
+                    for (int j = 1; j < bigDelta; ++j)
                     {
-                        x = region.Vertices[1].X + i;
-                        y = region.Vertices[1].Y + (j + 1) + a-1;
-                        mappedVals[i, j] = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y,bitmap)).Val;
+                        x += a * j;
+                        if (x > domainMaxX)
+                            break;
+                        MappedPoint mp = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap));
+                        mappedVals[mp.X - regCorner.X, mp.Y - regCorner.Y] = mp.Val;
                     }
+                    mappedVals[0, smallDelta - 1] = MNTools.GetBitmapValue(region.Vertices[2].X, region.Vertices[2].Y, bitmap);
                 }
-                else if  (i == maxX - 1)
+                else if (i == bigDelta - 1)
                 {
-                    mappedVals[i, 0] = MNTools.GetBitmapValue(region.Vertices[2].X, region.Vertices[2].Y, bitmap);
-                    mappedVals[i, maxY - 1] = MNTools.GetBitmapValue(region.Vertices[3].X, region.Vertices[3].Y, bitmap);
-                    for (int j = 1; j < maxY - 1; ++j)
+                    mappedVals[0, smallDelta - 1] = MNTools.GetBitmapValue(region.Vertices[0].X, region.Vertices[0].Y, bitmap);
+                    for (int j = 1; j < bigDelta; ++j)
                     {
-                        x = region.Vertices[1].X + i;
-                        y = region.Vertices[1].Y + (j + 1) + a-1;
-                        mappedVals[i, j] = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap)).Val;
+                        x += a * j;
+                        if (x > domainMaxX)
+                            break;
+                        MappedPoint mp = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap));
+                        mappedVals[mp.X - regCorner.X, mp.Y - regCorner.Y] = mp.Val;
                     }
+                    mappedVals[smallDelta - 1, smallDelta - 1] = MNTools.GetBitmapValue(region.Vertices[3].X, region.Vertices[3].Y, bitmap);
                 }
                 else
-                    for (int j = 0; j < maxY; ++j)
+                {
+                    for (int j = 0; j < bigDelta; ++j)
                     {
-                        x = region.Vertices[1].X + i;
-                        y = region.Vertices[1].Y  + j + a-1;
-                        mappedVals[i, j] = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap)).Val;
+                        x += a * j;
+                        if (x > domainMaxX)
+                            break;
+                        MappedPoint mp = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap));
+                        mappedVals[mp.X - regCorner.X, mp.Y - regCorner.Y] = mp.Val;
                     }
+                }
             }
 
             FractalCompression.Structure.Region mappedRegion = new FractalCompression.Structure.Region(region.Vertices, mappedVals);
             return mappedRegion;
         }
-
-        // a - regionsInDomainRow 
-        /*public static List<MappedPoint> ComputeInterpolationPoints0(Bitmap bitmap, int bigDelta, int a)
-        {
-            List<MappedPoint> interpolPoints = new List<MappedPoint>();
-            int smallDelta = bigDelta / a;
-
-            int regionsInColumn = bitmap.Height / smallDelta;
-            int domainsInRow = bitmap.Width / bigDelta;
-            int regionsInRow = domainsInRow * a;
-
-            int eastX, northY = 0;
-            MappedPoint mp2 = null, mp3 = null;
-            for (int i = 0; i < regionsInColumn; ++i)
-            {
-                eastX = 0;
-                mp2 = mp3 = null;
-                for (int j = 0; j < regionsInRow; ++j)
-                {
-                    if (mp2 != null && mp3 != null)
-                    {
-                        interpolPoints.Add(mp3);
-                        interpolPoints.Add(mp2);
-                    }
-                    else
-                    {
-                        interpolPoints.Add(CreateMappedPoint(bitmap, eastX, northY + smallDelta));
-                        interpolPoints.Add(CreateMappedPoint(bitmap, eastX, northY));
-                    }
-
-                    eastX += smallDelta;
-                    mp2 = CreateMappedPoint(bitmap, eastX, northY);
-                    mp3 = CreateMappedPoint(bitmap, eastX, northY + smallDelta);
-                    interpolPoints.Add(mp2);
-                    interpolPoints.Add(mp3);
-                }
-                northY += smallDelta;
-            }
-
-            return interpolPoints;
-        }*/
 
         // a - regionsInDomainRow 
         private static FractalCompression.Structure.Region[,] PrepareRegions(Bitmap bitmap, int bigDelta, int a, out FractalCompression.Structure.Region[,] regions, out List<MappedPoint> interpolPoints)

@@ -65,13 +65,16 @@ namespace FractalCompression.Tools
                 double s = 0;
                 int rCount = -1;
                 double[] nh = new double[domains.Length];
+                for (int i = 0; i < nh.Length; ++i)
+                    nh[i] = -1;
+
                 while (squeue.Count != 0)
                 {
                     FractalCompression.Structure.Region r = squeue.Dequeue();
                     rCount++;
 
-                    for (int i = 0; i < domains.GetUpperBound(0); i++)
-                        for (int j = 0; j < domains.GetUpperBound(1); j++)
+                    for (int i = 0; i <= domains.GetUpperBound(0); i++)
+                        for (int j = 0; j <= domains.GetUpperBound(1); j++)
                         {
                             Domain dom = domains[i, j];
                             if (dom != null)
@@ -80,8 +83,9 @@ namespace FractalCompression.Tools
                                 if (Math.Abs(s) >= 1)
                                     continue;
 
-                                if (!POTools.CheckConditionOfContinuity(domains, i, j, a, r, bitmap))
-                                    continue;
+                                if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
+                                    if (!POTools.CheckConditionOfContinuity(domains, i, j, a, r, bitmap))
+                                        continue;
 
                                Point pk = dom.Vertices[1], pi = r.Vertices[1];
                                 Mapper mapper = new Mapper(s, pk, pi, smallDelta, bigDelta,
@@ -90,43 +94,23 @@ namespace FractalCompression.Tools
                                     MNTools.GetBitmapValue(pk.X, pk.Y + bigDelta - 1, bitmap), 
                                     MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y + bigDelta - 1, bitmap),
                                     MNTools.GetBitmapValue(pi.X, pi.Y, bitmap), 
-                                    MNTools.GetBitmapValue(pi.X + smallDelta -1, pi.Y, bitmap),
-                                    MNTools.GetBitmapValue(pi.X , pi.Y + smallDelta - 1, bitmap), 
-                                    MNTools.GetBitmapValue(pi.X + smallDelta - 1, pi.Y + smallDelta - 1, bitmap));
+                                    MNTools.GetBitmapValue(pi.X + r.Size, pi.Y, bitmap),
+                                    MNTools.GetBitmapValue(pi.X , pi.Y + r.Size, bitmap), 
+                                    MNTools.GetBitmapValue(pi.X + r.Size, pi.Y + r.Size, bitmap));
 
                                 FractalCompression.Structure.Region mappedRegion = POTools.MapDomainToRegion(dom, r, bitmap, mapper, a);
-                                
-                                // to jest Ÿle - hij odnosi siê do j-tej domeny i i-tego regionu!
-                                //h[i, j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
-
                                 nh[domains.GetUpperBound(0) * i + j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
+                                //Console.WriteLine("nh[{0}]={1}", domains.GetUpperBound(0) * i + j, nh[domains.GetUpperBound(0) * i + j]);
                             }
                         }
-
-                    /*int minHi = 0, minHj = 0;
-                    double minH = h[minHi, minHj];
-                    for (int i = 0; i < h.GetUpperBound(0); i++)
-                        for (int j = 0; j < h.GetUpperBound(1); j++)
-                        {
-                            if (h[minHi, minHj] < minH)
-                            {
-                                minH = h[minHi, minHj];
-                                minHi = i;
-                                minHj = j;
-                            }
-                        }
-                     */
-
-                    //for(int j=0; j<nh.Length; ++j)
-                    //    Console.Write(nh[j]+" ");
 
                     int minHj = 0;
                     double minH = nh[0];
-                    for (int j = 0; j < nh.Length; j++)
+                    for (int j = 1; j < nh.Length; j++)
                         {
-                            if (nh[minHj] < minH)
+                            if (nh[j] < minH && nh[j]>=0)
                             {
-                                minH = nh[minHj];
+                                minH = nh[j];
                                 minHj = j;
                             }
                         }
@@ -142,29 +126,27 @@ namespace FractalCompression.Tools
                         Point pW = new Point(r.Vertices[0].X, hy);
                         Point pC = new Point(hx, hy);
 
-                        squeue2.Enqueue(new FractalCompression.Structure.Region(r.Vertices[0], pS, pC, pW));
-                        squeue2.Enqueue(new FractalCompression.Structure.Region(pS, pC, pE, r.Vertices[3]));
-                        squeue2.Enqueue(new FractalCompression.Structure.Region(pC, pN, r.Vertices[2], pE));
-                        squeue2.Enqueue(new FractalCompression.Structure.Region(pW, r.Vertices[1], pN, pC));
+                        FractalCompression.Structure.Region[] nRegs = new FractalCompression.Structure.Region[4];
+                        nRegs[0] = new FractalCompression.Structure.Region(r.Vertices[0], new Point(pW.X, pW.Y + 1), new Point(pC.X, pC.Y + 1), pS);
+                        nRegs[1] = new FractalCompression.Structure.Region(pW, r.Vertices[1], pN, pC);
+                        nRegs[2] = new FractalCompression.Structure.Region(new Point(pC.X+1, pC.Y), new Point(pN.X+1, pN.Y), r.Vertices[2], pE);
+                        nRegs[3] = new FractalCompression.Structure.Region(new Point(pS.X + 1, pS.Y), new Point(pC.X + 1, pC.Y+1), new Point(pE.X, pE.Y+1), r.Vertices[3]);
 
-                        /*iqueue.Enqueue(pN);
-                        iqueue.Enqueue(pE);
-                        iqueue.Enqueue(pS);
-                        iqueue.Enqueue(pW);
-                        iqueue.Enqueue(pC);*/
-
-                        iqueue.Enqueue(new MappedPoint(pN.X, pN.Y, MNTools.GetBitmapValue(pN.X, pN.Y, bitmap)));
-                        iqueue.Enqueue(new MappedPoint(pE.X, pE.Y, MNTools.GetBitmapValue(pE.X, pE.Y, bitmap)));
-                        iqueue.Enqueue(new MappedPoint(pS.X, pS.Y, MNTools.GetBitmapValue(pS.X, pS.Y, bitmap)));
-                        iqueue.Enqueue(new MappedPoint(pW.X, pW.Y, MNTools.GetBitmapValue(pW.X, pW.Y, bitmap)));
-                        iqueue.Enqueue(new MappedPoint(pC.X, pC.Y, MNTools.GetBitmapValue(pC.X, pC.Y, bitmap)));
+                        for (int i = 0; i < nRegs.Length; i++)
+                        {
+                            squeue2.Enqueue(nRegs[i]);
+                            for(int j=0; j<4; j++)
+                            {
+                                Point vert = nRegs[i].Vertices[j];
+                                iqueue.Enqueue(new MappedPoint(vert.X, vert.Y, MNTools.GetBitmapValue(vert.X,vert.Y,bitmap)));
+                            }
+                        }
 
                         aqueue.Enqueue(-1);
                     }
                     else
                     {
                         //store j with the min distance inside aqueue and s inside cqueue
-                        //aqueue.Enqueue(new Point3D(minHi, minHj, minH));
                         aqueue.Enqueue(minHj);
                         cqueue.Enqueue(s);
                     }

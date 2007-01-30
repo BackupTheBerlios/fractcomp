@@ -12,6 +12,7 @@ namespace FractalCompression.Structure
         //0 - (x0,y0)  1 - (x0,y1), 2 - (x1,y1), 3 - (x1, y0)
         private Point[] vertices;
         private int a;
+        private int smallDelta;
         
         public Point[] Vertices
         {
@@ -40,6 +41,8 @@ namespace FractalCompression.Structure
             vertices[2] = p2;
             vertices[3] = p3;
             this.a = a;
+
+            this.smallDelta = (vertices[3].X - vertices[0].X+1) / a;
         }
 
         public Domain(Point[] vertices, int a)
@@ -50,14 +53,16 @@ namespace FractalCompression.Structure
             for (int i = 0; i < vertices.Length; i++)
                 this.vertices[i] = vertices[i];
             this.a = a;
+
+            this.smallDelta = (vertices[3].X - vertices[0].X+1) / a;
         }
 
         public double Left(int v, Bitmap bitmap)
         {
             Point3D interpolP = new Point3D(
                 vertices[0].X,
-                vertices[0].Y + a * v,
-                MNTools.GetBitmapValue(vertices[0].X, vertices[0].Y + a * v, bitmap));
+                vertices[0].Y + smallDelta * v - 1,
+                MNTools.GetBitmapValue(vertices[0].X, vertices[0].Y + smallDelta * v-1, bitmap));
 
             Point3D lineStart = new Point3D(
                 vertices[0].X,
@@ -81,8 +86,8 @@ namespace FractalCompression.Structure
         {
             Point3D interpolP = new Point3D(
                 vertices[3].X,
-                vertices[3].Y + a * v,
-                MNTools.GetBitmapValue(vertices[3].X, vertices[3].Y + a * v, bitmap));
+                vertices[3].Y + smallDelta * v - 1,
+                MNTools.GetBitmapValue(vertices[3].X, vertices[3].Y + smallDelta * v - 1, bitmap));
 
             Point3D lineStart = new Point3D(
                 vertices[2].X,
@@ -105,9 +110,9 @@ namespace FractalCompression.Structure
         public double Down(int v, Bitmap bitmap)
         {
             Point3D interpolP = new Point3D(
-                vertices[0].X + a * v,
+                vertices[0].X + smallDelta * v - 1,
                 vertices[0].Y,
-                MNTools.GetBitmapValue(vertices[0].X + a * v, vertices[0].Y, bitmap));
+                MNTools.GetBitmapValue(vertices[0].X + smallDelta * v - 1, vertices[0].Y, bitmap));
 
             Point3D lineStart = new Point3D(
                 vertices[0].X,
@@ -130,9 +135,9 @@ namespace FractalCompression.Structure
         public double Up(int v, Bitmap bitmap)
         {
             Point3D interpolP = new Point3D(
-                vertices[1].X + a * v,
+                vertices[1].X + smallDelta * v - 1,
                 vertices[1].Y,
-                MNTools.GetBitmapValue(vertices[1].X + a * v, vertices[1].Y, bitmap));
+                MNTools.GetBitmapValue(vertices[1].X + smallDelta * v - 1, vertices[1].Y, bitmap));
 
             Point3D lineStart = new Point3D(
                 vertices[1].X,
