@@ -97,7 +97,7 @@ namespace FractalCompression
             List<MappedPoint> intrpList = null;
             POTools.PrepareStructures(bitmap, bigDelta, a, out regions, 
                 out domains, out intrpList);
-            Compressor compressor = new Compressor(bigDelta, a, 1000, 3, 
+            Compressor compressor = new Compressor(bigDelta, a, 10, 3, 
                 domains, regions, intrpList, bitmap);
             Console.WriteLine("Compression started...");
             compressor.Compress();
@@ -119,7 +119,6 @@ namespace FractalCompression
                 cr.ImageHeight, cr.DMax);
             Console.WriteLine("Decompressing image...");
             return decompressor.DecompressImage();
-            Console.WriteLine("Decompression done.");
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -162,16 +161,6 @@ namespace FractalCompression
                     Properties.Settings.Default.bigDelta,
                     Properties.Settings.Default.a, filepath);
                 this.compresedPictureBox.Image = Decompress(filepath);
-            }
-        }
-
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
-        {
-            if (this.imageOpenFileDialog1.ShowDialog() == DialogResult.OK)
-            {
-                this.bitmap = MNTools.RescaleBitmap(
-                    Image.FromFile(imageOpenFileDialog1.FileName));
-                this.originallPictureBox.Image = bitmap;
             }
         }
 

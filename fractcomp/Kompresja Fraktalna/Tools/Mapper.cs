@@ -40,14 +40,14 @@ namespace FractalCompression.Tools
             k = pi.X - pk.X * a;
             d = a;
             l = pi.Y - pk.Y * d;
-            double[] B = new double[] { val5 - s * val1, val8 - s * val3, val6 - s * val2, val7 - s * val4 };
-            double[][] A = new double[][] { 
-                new double[]  { pk.X, pk.Y, pk.X * pk.Y, 1 },
-                new double[]{ pk.X, pk.Y+bigDelta, pk.X*(pk.Y+bigDelta), 1},
-                new double[]{ pk.X+bigDelta, pk.Y, (pk.X+bigDelta)*(pk.Y), 1},
-                new double[]{ pk.X+bigDelta, pk.Y+bigDelta, (pk.X+bigDelta)*(pk.Y+bigDelta), 1}
+            double[] B = new double[4];
+            double[,] A = new double[,] { 
+                   { val1, pk.Y, pk.X * pk.Y, 1, val5 - s * val1 },
+                   { val2, pk.Y, (pk.X+bigDelta)*(pk.Y), 1, val6 - s * val2},
+                   { val3, pk.Y+bigDelta, pk.X*(pk.Y+bigDelta), 1, val8 - s * val3},
+                   { val4, pk.Y+bigDelta, (pk.X+bigDelta)*(pk.Y+bigDelta), 1, val7 - s * val4}
             };
-            if (Gauss.gauss_cz(A, B) == 0)
+            if (Gauss.GaussianElimination(A, B))
             {
                 e = B[0];
                 g = B[1];
@@ -55,7 +55,7 @@ namespace FractalCompression.Tools
                 m = B[3];
             }
             else
-                throw new Exception("Macierz osobliwa");
+               throw new Exception("Macierz osobliwa");
 
         }
 
@@ -71,6 +71,5 @@ namespace FractalCompression.Tools
             mappedVal = Math.Round(mappedVal) % 255;
             return new MappedPoint(mappedX, mappedY, mappedVal);
         }
-
     }
 }
