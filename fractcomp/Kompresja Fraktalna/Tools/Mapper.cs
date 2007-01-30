@@ -64,6 +64,11 @@ namespace FractalCompression.Tools
             int mappedX = (int)(a * x + k);
             int mappedY = (int)(d * y + l);
             double mappedVal = e * x + g * y + h * x * y + s * val + m;
+            if (mappedVal < 0)
+            {
+                mappedVal = Math.Abs(mappedVal);
+            }
+            mappedVal = Math.Round(mappedVal) % 255;
             return new MappedPoint(mappedX, mappedY, mappedVal);
         }
 

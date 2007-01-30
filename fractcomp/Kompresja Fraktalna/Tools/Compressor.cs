@@ -83,12 +83,16 @@ namespace FractalCompression.Tools
                                 if (!POTools.CheckConditionOfContinuity(domains, i, j, a, r, bitmap))
                                     continue;
 
-                                Point pk = dom.Vertices[3], pi = r.Vertices[3];
+                               Point pk = dom.Vertices[1], pi = r.Vertices[1];
                                 Mapper mapper = new Mapper(s, pk, pi, smallDelta, bigDelta,
-                                    MNTools.GetBitmapValue(pk.X, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + bigDelta, pk.Y, bitmap),
-                                    MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y + bigDelta - 1, bitmap),
-                                    MNTools.GetBitmapValue(pk.X, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + smallDelta, pk.Y, bitmap),
-                                    MNTools.GetBitmapValue(pk.X + smallDelta - 1, pk.Y, bitmap), MNTools.GetBitmapValue(pk.X + smallDelta - 1, pk.Y + smallDelta - 1, bitmap));
+                                    MNTools.GetBitmapValue(pk.X, pk.Y, bitmap), 
+                                    MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y, bitmap),
+                                    MNTools.GetBitmapValue(pk.X, pk.Y + bigDelta - 1, bitmap), 
+                                    MNTools.GetBitmapValue(pk.X + bigDelta - 1, pk.Y + bigDelta - 1, bitmap),
+                                    MNTools.GetBitmapValue(pi.X, pi.Y, bitmap), 
+                                    MNTools.GetBitmapValue(pi.X + smallDelta, pi.Y, bitmap),
+                                    MNTools.GetBitmapValue(pi.X , pi.Y + smallDelta - 1, bitmap), 
+                                    MNTools.GetBitmapValue(pi.X + smallDelta - 1, pi.Y + smallDelta - 1, bitmap));
 
                                 FractalCompression.Structure.Region mappedRegion = POTools.MapDomainToRegion(dom, r, bitmap, mapper, a);
                                 

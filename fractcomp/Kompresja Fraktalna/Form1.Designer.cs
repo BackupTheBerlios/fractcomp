@@ -159,15 +159,16 @@ namespace FractalCompression
             // imageOpenFileDialog1
             // 
             this.imageOpenFileDialog1.Filter = "Image files | *.jpg; *.bmp";
+            this.imageOpenFileDialog1.FileOk += new System.ComponentModel.CancelEventHandler(this.imageOpenFileDialog1_FileOk);
             // 
             // saveFileDialog1
             // 
             this.saveFileDialog1.DefaultExt = "nocf";
-            this.saveFileDialog1.Filter = "Fractal Compression Image | *.nocf";
+            this.saveFileDialog1.Filter = "Fractal Compression Image | *.nofc";
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "Fractal Compression Image | *.nocf";
+            this.openFileDialog1.Filter = "Fractal Compression Image | *.nofc";
             // 
             // Form1
             // 

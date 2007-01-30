@@ -86,7 +86,7 @@ namespace FractalCompression.Tools
         public static byte GetBitmapValue(int x, int y, Bitmap bitmap)
         {
             if (x < 0 || y < 0 || x > bitmap.Width || y > bitmap.Height)
-                throw new Exception("Index out of bound");
+                throw new System.IndexOutOfRangeException();
             return bitmap.GetPixel(x, y).B;
         }
 
@@ -95,11 +95,11 @@ namespace FractalCompression.Tools
             FractalCompression.Structure.Region region, Bitmap bitmap)
         {
             double h = 0;
-            for (int x = mappedRegion.Vertices[0].X; x <= mappedRegion.Vertices[3].X; x++)
+            for (int x = mappedRegion.Vertices[0].X; x < mappedRegion.Vertices[3].X; x++)
             {
-                for (int y = mappedRegion.Vertices[0].Y; y <= mappedRegion.Vertices[1].Y; y++)
+                for (int y = mappedRegion.Vertices[1].Y; y < mappedRegion.Vertices[0].Y; y++)
                 {
-                    h += DistanceMeasure(mappedRegion[x - mappedRegion.Size, y - mappedRegion.Size],
+                    h += DistanceMeasure(mappedRegion[x % mappedRegion.Size, y % mappedRegion.Size],
                         GetBitmapValue(x, y, bitmap));
                 }
             }
@@ -108,7 +108,7 @@ namespace FractalCompression.Tools
 
         private static double DistanceMeasure(double  val1, double val2)
         {
-            return val1 - val2;
+            return Math.Abs(val1 - val2);
         }
     }
 }

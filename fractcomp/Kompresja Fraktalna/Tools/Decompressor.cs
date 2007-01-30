@@ -61,29 +61,41 @@ namespace FractalCompression.Tools
                             MyDomain md = GetDomain(coresspondingDomain);
                             Mapper mapper = new Mapper(contractivityFactor,
                                 md.Domain.Vertices[0], interpolationPoints[j],
-                                this.smallDelta, this.bigDelta, md.Vals[0],
-                                md.Vals[1], md.Vals[2], md.Vals[3],
-                                (int)interpolationPoints[j].Val,
+                                this.smallDelta, this.bigDelta, md.Vals[1],
+                                md.Vals[2], md.Vals[3], md.Vals[0],
                                 (int)interpolationPoints[j + 1].Val,
                                 (int)interpolationPoints[j + 2].Val,
-                                (int)interpolationPoints[j + 3].Val);
-                            Point prevPoint = md.Domain.Vertices[0];
-                            int prevVal = md.Vals[0];
+                                (int)interpolationPoints[j + 3].Val,
+                                (int)interpolationPoints[j].Val);
+                            Point[] prevPoints = md.Domain.Vertices;
+                            int[] prevVals = md.Vals;
                             for (int k = 0; k < md.Domain.Size * md.Domain.Size; k++)
                             {
-                                MappedPoint newPoint = mapper.MapPoint(prevPoint.X,
-                                    prevPoint.Y, (double)prevVal);
-                                bit.SetPixel(newPoint.X, newPoint.Y,
-                                    Color.FromArgb((int)newPoint.Val,
-                                    (int)newPoint.Val, (int)newPoint.Val));
-                                prevPoint = newPoint;
-                                prevVal = (int)newPoint.Val;
+                                MappedPoint[] newPoints = new MappedPoint[4];
+                                for (int ii = 0; ii < prevPoints.Length; ii++)
+                                {
+                                    newPoints[ii] = mapper.MapPoint(prevPoints[ii].X,
+                                     prevPoints[ii].Y, (double)prevVals[ii]);
+                                    SafePutPixel(newPoints[ii].X, newPoints[ii].Y, (int)newPoints[ii].Val
+                                             , bit);
+                                }
+                                for (int ii = 0; ii < newPoints.Length; ii++)
+                                {
+                                    prevPoints[ii] = newPoints[ii];
+                                    prevVals[ii] = (int)newPoints[ii].Val;
+                                }
                             }
                         }
                     }
                 }
             }
             return bit;
+        }
+
+        private void SafePutPixel(int x, int y,int val, Bitmap bit)
+        {
+            if (x >= 0 && y >= 0 && x < bit.Width && y < bit.Width && val < 256)
+                bit.SetPixel(x, y, Color.FromArgb(val, val, val));
         }
 
         private MyDomain GetDomain(int address)
@@ -95,8 +107,8 @@ namespace FractalCompression.Tools
             MyDomain md = null;
             for (int i = 0; i < this.interpolationPoints.Count; i++)
             {
-                if (domainX == interpolationPoints[i].X &&
-                    domainY == interpolationPoints[i].Y)
+                if (domainX == interpolationPoints[i + 1].X &&
+                    domainY == interpolationPoints[i + 1].Y)
                 {
                     int[] vals = new int[4];
                     Domain d = new Domain(interpolationPoints[i],
