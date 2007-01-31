@@ -12,20 +12,6 @@ namespace FractalCompression.Tools
 {
     class POTools
     {
-        public static bool CheckConditionOfContinuity(Domain[,] domains, double[,] s, int a, Bitmap bitmap)
-        {
-            for (int i = 0; i < domains.GetUpperBound(0)-1; i++)
-                for (int j = 0; j < domains.GetUpperBound(1)-1; j++)
-                    for (int v = 1; v < a; v++)
-                    {
-                        if (s[i, j] * domains[i, j].Right(v, bitmap) != s[i + 1, j] * domains[i + 1, j].Left(v, bitmap))
-                            return false;
-                        if (s[i, j] * domains[i, j].Up(v, bitmap) != s[i, j + 1] * domains[i, j + 1].Down(v, bitmap))
-                            return false;
-                    }
-            return true;
-        }
-
         public static bool CheckConditionOfContinuity(Domain[,] domains, int i, int j, int a, FractalCompression.Structure.Region region, Bitmap bitmap)
         {
             if (i<0 || j<0 || (i > domains.GetUpperBound(0)) || (j > domains.GetUpperBound(1)))
@@ -40,11 +26,12 @@ namespace FractalCompression.Tools
             double sijp1 = MNTools.ComputeContractivityFactor(dijp1, region, bitmap);
 
             //TODO: spr czy na pewno v=0 (a nie 1) i v< a-1 a nie (v<a)
-            for (int v = 0; v < a-1 ; v++)
+            for (int v = 1; v < a ; v++)
             {
-                if (sij * dij.Right(v, bitmap) != sip1j * dip1j.Left(v, bitmap))
+                Console.WriteLine(sij * dij.Right(v, bitmap) + " ? " + (sip1j * dip1j.Left(v, bitmap)));
+                if ((sij * dij.Right(v, bitmap)) != (sip1j * dip1j.Left(v, bitmap)))
                     return false;
-                if (sij * dij.Up(v, bitmap) != sijp1 * dijp1.Down(v, bitmap))
+                if ((sij * dij.Up(v, bitmap)) != (sijp1 * dijp1.Down(v, bitmap)))
                     return false;
             }
 
