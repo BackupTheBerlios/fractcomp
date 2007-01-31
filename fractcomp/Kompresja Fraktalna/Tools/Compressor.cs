@@ -99,21 +99,37 @@ namespace FractalCompression.Tools
                                     MNTools.GetBitmapValue(pi.X + r.Size, pi.Y + r.Size, bitmap));
 
                                 FractalCompression.Structure.Region mappedRegion = POTools.MapDomainToRegion(dom, r, bitmap, mapper, a);
-                                nh[domains.GetUpperBound(0) * i + j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
+                                nh[(domains.GetUpperBound(0)+1) * i + j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);
                                 //Console.WriteLine("nh[{0}]={1}", domains.GetUpperBound(0) * i + j, nh[domains.GetUpperBound(0) * i + j]);
                             }
                         }
 
+                    /*for (int j = 0; j < nh.Length; j++)
+                        Console.Write(nh[j] + ", ");
+                    Console.WriteLine();*/                   
+
                     int minHj = 0;
                     double minH = nh[0];
-                    for (int j = 1; j < nh.Length; j++)
+                    for (int j = 0; j < nh.Length; j++)
+                    {
+                        if (nh[j] >= 0)
                         {
-                            if (nh[j] < minH && nh[j]>=0)
-                            {
-                                minH = nh[j];
-                                minHj = j;
-                            }
+                            minHj = j;
+                            minH = nh[j];
+                            break;
                         }
+                    }
+
+                    for (int j = minHj + 1; j < nh.Length; j++)
+                    {
+                        if (nh[j] < minH && nh[j] >= 0)
+                        {
+                            minH = nh[j];
+                            minHj = j;
+                        }
+                    }
+
+                    //Console.WriteLine("minH = {0} - nh[{1}]", minH, minHj);
 
                     if (minH > eps && d < dmax)
                     {
@@ -144,7 +160,7 @@ namespace FractalCompression.Tools
 
                         aqueue.Enqueue(-1);
                     }
-                    else
+                    else if(minHj>=0)
                     {
                         //store j with the min distance inside aqueue and s inside cqueue
                         aqueue.Enqueue(minHj);
@@ -157,7 +173,7 @@ namespace FractalCompression.Tools
                     squeue = squeue2;
                     d++;
                 }
-            } while (squeue2.Count != 0);
+            } while (squeue.Count != 0);
 
             //store dmax, smallDelta, bigDelta, cqueue, iqueue, aqueue
         }
