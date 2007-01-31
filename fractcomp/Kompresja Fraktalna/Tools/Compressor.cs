@@ -18,7 +18,6 @@ namespace FractalCompression.Tools
         private Queue<MappedPoint> iqueue;
 
         private Queue<double> cqueue;               //contractivity factors
-        //private Queue<Point3D> aqueue;              //addresses domain's i,j, minHij
         private Queue<int> aqueue;                     //addresses domain's
         private Queue<FractalCompression.Structure.Region> squeue2;
 
@@ -63,7 +62,6 @@ namespace FractalCompression.Tools
             do
             {
                 double s = 0;
-                int rCount = -1;
                 double[] nh = new double[domains.Length];
                 for (int i = 0; i < nh.Length; ++i)
                     nh[i] = -1;
@@ -71,8 +69,6 @@ namespace FractalCompression.Tools
                 while (squeue.Count != 0)
                 {
                     FractalCompression.Structure.Region r = squeue.Dequeue();
-                    rCount++;
-
                     for (int i = 0; i <= domains.GetUpperBound(0); i++)
                         for (int j = 0; j <= domains.GetUpperBound(1); j++)
                         {
@@ -128,41 +124,15 @@ namespace FractalCompression.Tools
                             minHj = j;
                         }
                     }
-
                     //Console.WriteLine("minH = {0} - nh[{1}]", minH, minHj);
 
                     if (minH > eps && d < dmax)
                     {
-                        int hx = (r.Vertices[1].X + r.Vertices[2].X) / 2;
-                        int hy = (r.Vertices[2].Y + r.Vertices[3].Y) / 2;
-
-                        Point pN = new Point(hx, r.Vertices[1].Y);
-                        Point pE = new Point(r.Vertices[3].X, hy);
-                        Point pS = new Point(hx, r.Vertices[0].Y);
-                        Point pW = new Point(r.Vertices[0].X, hy);
-                        Point pC = new Point(hx, hy);
-
-                        FractalCompression.Structure.Region[] nRegs = new FractalCompression.Structure.Region[4];
-                        nRegs[0] = new FractalCompression.Structure.Region(r.Vertices[0], new Point(pW.X, pW.Y + 1), new Point(pC.X, pC.Y + 1), pS);
-                        nRegs[1] = new FractalCompression.Structure.Region(pW, r.Vertices[1], pN, pC);
-                        nRegs[2] = new FractalCompression.Structure.Region(new Point(pC.X+1, pC.Y), new Point(pN.X+1, pN.Y), r.Vertices[2], pE);
-                        nRegs[3] = new FractalCompression.Structure.Region(new Point(pS.X + 1, pS.Y), new Point(pC.X + 1, pC.Y+1), new Point(pE.X, pE.Y+1), r.Vertices[3]);
-
-                        for (int i = 0; i < nRegs.Length; i++)
-                        {
-                            squeue2.Enqueue(nRegs[i]);
-                            for(int j=0; j<4; j++)
-                            {
-                                Point vert = nRegs[i].Vertices[j];
-                                iqueue.Enqueue(new MappedPoint(vert.X, vert.Y, MNTools.GetBitmapValue(vert.X,vert.Y,bitmap)));
-                            }
-                        }
-
+                        DivideRegion(r);
                         aqueue.Enqueue(-1);
                     }
-                    else if(minHj>=0)
+                    else if (minHj >= 0)   //store j with the min distance inside aqueue and s inside cqueue
                     {
-                        //store j with the min distance inside aqueue and s inside cqueue
                         aqueue.Enqueue(minHj);
                         cqueue.Enqueue(s);
                     }
@@ -174,12 +144,39 @@ namespace FractalCompression.Tools
                     d++;
                 }
             } while (squeue.Count != 0);
+        }
 
-            //store dmax, smallDelta, bigDelta, cqueue, iqueue, aqueue
+        private void DivideRegion(FractalCompression.Structure.Region r)
+        {
+            int hx = (r.Vertices[1].X + r.Vertices[2].X) / 2;
+            int hy = (r.Vertices[2].Y + r.Vertices[3].Y) / 2;
+
+            Point pN = new Point(hx, r.Vertices[1].Y);
+            Point pE = new Point(r.Vertices[3].X, hy);
+            Point pS = new Point(hx, r.Vertices[0].Y);
+            Point pW = new Point(r.Vertices[0].X, hy);
+            Point pC = new Point(hx, hy);
+
+            FractalCompression.Structure.Region[] nRegs = new FractalCompression.Structure.Region[4];
+            nRegs[0] = new FractalCompression.Structure.Region(r.Vertices[0], new Point(pW.X, pW.Y + 1), new Point(pC.X, pC.Y + 1), pS);
+            nRegs[1] = new FractalCompression.Structure.Region(pW, r.Vertices[1], pN, pC);
+            nRegs[2] = new FractalCompression.Structure.Region(new Point(pC.X + 1, pC.Y), new Point(pN.X + 1, pN.Y), r.Vertices[2], pE);
+            nRegs[3] = new FractalCompression.Structure.Region(new Point(pS.X + 1, pS.Y), new Point(pC.X + 1, pC.Y + 1), new Point(pE.X, pE.Y + 1), r.Vertices[3]);
+
+            for (int i = 0; i < nRegs.Length; i++)
+            {
+                squeue2.Enqueue(nRegs[i]);
+                for (int j = 0; j < 4; j++)
+                {
+                    Point vert = nRegs[i].Vertices[j];
+                    iqueue.Enqueue(new MappedPoint(vert.X, vert.Y, MNTools.GetBitmapValue(vert.X, vert.Y, bitmap)));
+                }
+            }
         }
 
         public void SaveToFile(String filepath)
         {
+            //store dmax, smallDelta, bigDelta, cqueue, iqueue, aqueue
             CompResult results = new CompResult(aqueue, cqueue, iqueue, bigDelta, smallDelta, a, dmax,bitmap.Width,bitmap.Height);
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fs = new FileStream(filepath, FileMode.Create);
@@ -191,12 +188,6 @@ namespace FractalCompression.Tools
         {
             get { return iqueue; }
         }
-
-
-        /*public Queue<Point3D> Aqueue
-        {
-            get { return aqueue; }
-        }*/
 
         public Queue<int> Aqueue
         {
