@@ -72,12 +72,16 @@ namespace FractalCompression.Tools
                             for (int k = 0; k < md.Domain.Size * md.Domain.Size; k++)
                             {
                                 MappedPoint[] newPoints = new MappedPoint[4];
-                                for (int ii = 0; ii < prevPoints.Length; ii++)
+                                for (int ii = 0; ii < newPoints.Length; ii++)
                                 {
                                     newPoints[ii] = mapper.MapPoint(prevPoints[ii].X,
                                      prevPoints[ii].Y, (double)prevVals[ii]);
                                     SafePutPixel(newPoints[ii].X, newPoints[ii].Y, (int)newPoints[ii].Val
                                              , bit);
+                                /*    SafePutPixel(newPoints[ii].X + smallDelta / a, newPoints[ii].Y, (int)newPoints[ii].Val
+                                             , bit);
+                                    SafePutPixel(newPoints[ii].X + 2 * smallDelta / a, newPoints[ii].Y, (int)newPoints[ii].Val
+                                            , bit);*/
                                 }
                                 for (int ii = 0; ii < newPoints.Length; ii++)
                                 {

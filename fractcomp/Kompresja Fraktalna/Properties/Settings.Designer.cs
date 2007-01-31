@@ -58,5 +58,17 @@ namespace FractalCompression.Properties {
                 this["a"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int eps {
+            get {
+                return ((int)(this["eps"]));
+            }
+            set {
+                this["eps"] = value;
+            }
+        }
     }
 }
