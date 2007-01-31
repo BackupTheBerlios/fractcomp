@@ -97,7 +97,7 @@ namespace FractalCompression
             List<MappedPoint> intrpList = null;
             POTools.PrepareStructures(bitmap, bigDelta, a, out regions, 
                 out domains, out intrpList);
-            Compressor compressor = new Compressor(bigDelta, a, 10, 3, 
+            Compressor compressor = new Compressor(bigDelta, a, 3, 3, 
                 domains, regions, intrpList, bitmap);
             Console.WriteLine("Compression started...");
             compressor.Compress();
@@ -157,10 +157,14 @@ namespace FractalCompression
             if (this.saveFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 string filepath = this.saveFileDialog1.FileName;
+                this.Refresh();
+                Cursor old = this.Cursor;
+                this.Cursor = System.Windows.Forms.Cursors.WaitCursor;
                 Compress((Bitmap)this.originallPictureBox.Image, 
                     Properties.Settings.Default.bigDelta,
                     Properties.Settings.Default.a, filepath);
                 this.compresedPictureBox.Image = Decompress(filepath);
+                this.Cursor = old;
             }
         }
 
