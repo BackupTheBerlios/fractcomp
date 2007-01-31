@@ -60,19 +60,19 @@ namespace FractalCompression.Structure
         public double Left(int v, Bitmap bitmap)
         {
             Point3D interpolP = new Point3D(
-                vertices[0].X,
-                vertices[0].Y + smallDelta * v - 1,
-                MNTools.GetBitmapValue(vertices[0].X, vertices[0].Y + smallDelta * v-1, bitmap));
+                vertices[1].X,
+                vertices[1].Y + smallDelta * v - 1,
+                MNTools.GetBitmapValue(vertices[1].X, vertices[1].Y + smallDelta * v-1, bitmap));
 
             Point3D lineStart = new Point3D(
-                vertices[0].X,
-                vertices[0].Y,
-                MNTools.GetBitmapValue(vertices[0].X, vertices[0].Y, bitmap));
-
-            Point3D lineEnd = new Point3D(
                 vertices[1].X,
                 vertices[1].Y,
                 MNTools.GetBitmapValue(vertices[1].X, vertices[1].Y, bitmap));
+
+            Point3D lineEnd = new Point3D(
+                vertices[0].X,
+                vertices[0].Y,
+                MNTools.GetBitmapValue(vertices[0].X, vertices[0].Y, bitmap));
 
             int signum = POTools.DistanceSignum(
                 new PointF((float)interpolP.Y, (float)interpolP.Z),

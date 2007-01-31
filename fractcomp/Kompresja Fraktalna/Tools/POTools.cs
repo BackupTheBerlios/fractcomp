@@ -28,7 +28,7 @@ namespace FractalCompression.Tools
             //TODO: spr czy na pewno v=0 (a nie 1) i v< a-1 a nie (v<a)
             for (int v = 1; v < a ; v++)
             {
-                Console.WriteLine(sij * dij.Right(v, bitmap) + " ? " + (sip1j * dip1j.Left(v, bitmap)));
+                //Console.WriteLine(sij * dij.Right(v, bitmap) + " ? " + (sip1j * dip1j.Left(v, bitmap)));
                 if ((sij * dij.Right(v, bitmap)) != (sip1j * dip1j.Left(v, bitmap)))
                     return false;
                 if ((sij * dij.Up(v, bitmap)) != (sijp1 * dijp1.Down(v, bitmap)))

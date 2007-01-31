@@ -100,9 +100,9 @@ namespace FractalCompression.Tools
                             }
                         }
 
-                    /*for (int j = 0; j < nh.Length; j++)
+                    for (int j = 0; j < nh.Length; j++)
                         Console.Write(nh[j] + ", ");
-                    Console.WriteLine();*/                   
+                    Console.WriteLine();
 
                     int minHj = 0;
                     double minH = nh[0];
