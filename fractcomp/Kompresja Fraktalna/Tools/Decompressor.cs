@@ -55,7 +55,7 @@ namespace FractalCompression.Tools
                     for (int j = 0; j < this.interpolationPoints.Count ; j+=4)
                     {
                         int coresspondingDomain = addresses[j / 4];
-                        if (j != -1)
+                        if (coresspondingDomain != -1)
                         {
                             double contractivityFactor = contractivityFactors[j / 4];
                             MyDomain md = GetDomain(coresspondingDomain);
@@ -69,7 +69,7 @@ namespace FractalCompression.Tools
                                  md.Vals[1], md.Vals[2], md.Vals[3], md.Vals[0]);
                             Point[] prevPoints = md.Domain.Vertices;
                             int[] prevVals = md.Vals;
-                            for (int k = 0; k < md.Domain.Size * md.Domain.Size; k++)
+                            for (int k = 0; k < md.Domain.Size * md.Domain.Size ; k++)
                             {
                                 MappedPoint[] newPoints = new MappedPoint[4];
                                 for (int ii = 0; ii < newPoints.Length; ii++)
@@ -78,10 +78,12 @@ namespace FractalCompression.Tools
                                      prevPoints[ii].Y, (double)prevVals[ii]);
                                     SafePutPixel(newPoints[ii].X, newPoints[ii].Y, (int)newPoints[ii].Val
                                              , bit);
-                                /*    SafePutPixel(newPoints[ii].X + smallDelta / a, newPoints[ii].Y, (int)newPoints[ii].Val
+                               /*   SafePutPixel(newPoints[ii].X+smallDelta, newPoints[ii].Y, (int)newPoints[ii].Val
                                              , bit);
-                                    SafePutPixel(newPoints[ii].X + 2 * smallDelta / a, newPoints[ii].Y, (int)newPoints[ii].Val
-                                            , bit);*/
+                                    SafePutPixel(newPoints[ii].X, newPoints[ii].Y + smallDelta, (int)newPoints[ii].Val
+                                             , bit);
+                                    SafePutPixel(newPoints[ii].X + smallDelta, newPoints[ii].Y + smallDelta, (int)newPoints[ii].Val
+                                             , bit);*/
                                 }
                                 for (int ii = 0; ii < newPoints.Length; ii++)
                                 {
@@ -98,8 +100,10 @@ namespace FractalCompression.Tools
 
         private void SafePutPixel(int x, int y,int val, Bitmap bit)
         {
-            if (x >= 0 && y >= 0 && x < bit.Width && y < bit.Width && val < 256)
+            if (x >= 0 && y >= 0 && x < bit.Width && y < bit.Width && val < 256 && val >= 0)
                 bit.SetPixel(x, y, Color.FromArgb(val, val, val));
+            else
+                Console.Out.WriteLine("Invalid data in SafePutPixel: x=" + x + " y=" + y + " val=" + val);
         }
 
         private MyDomain GetDomain(int address)
@@ -109,7 +113,7 @@ namespace FractalCompression.Tools
             int domainX = (address / numberOfDomainInWidth) * this.bigDelta;
             int domainY = (address % numberOfDomainInHeight) * this.bigDelta;
             MyDomain md = null;
-            for (int i = 0; i < this.interpolationPoints.Count; i++)
+            for (int i = 0; i < this.interpolationPoints.Count; i+=4)
             {
                 if (domainX == interpolationPoints[i + 1].X &&
                     domainY == interpolationPoints[i + 1].Y)
@@ -126,7 +130,6 @@ namespace FractalCompression.Tools
                     md = new MyDomain(d, vals);
                     break;
                 }
-                i += 4;
             }
             return md;
         }
