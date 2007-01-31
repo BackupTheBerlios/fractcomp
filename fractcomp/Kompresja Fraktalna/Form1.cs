@@ -97,7 +97,7 @@ namespace FractalCompression
             List<MappedPoint> intrpList = null;
             POTools.PrepareStructures(bitmap, bigDelta, a, out regions, 
                 out domains, out intrpList);
-            Compressor compressor = new Compressor(bigDelta, a, 3, 3, 
+            Compressor compressor = new Compressor(bigDelta, a,Properties.Settings.Default.eps, 3, 
                 domains, regions, intrpList, bitmap);
             Console.WriteLine("Compression started...");
             compressor.Compress();
