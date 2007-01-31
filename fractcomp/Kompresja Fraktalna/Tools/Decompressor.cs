@@ -17,6 +17,8 @@ namespace FractalCompression.Tools
         private int height;
         private int dMax;
         private int realSize;
+        private int goodPixel = 0;
+        private int badPixel = 0;
 
         public Decompressor(List<double> contrctivtyFactors,
             List<MappedPoint> interpolationPoints, List<int> addresses,
@@ -38,6 +40,7 @@ namespace FractalCompression.Tools
         public Bitmap DecompressImage()
         {
             int steps = (int)Math.Truncate(Math.Log(smallDelta, 2) / Math.Log(a, 2));
+            int contractivityIndex = 0;
             Bitmap bit = new Bitmap(width, height, 
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
@@ -48,16 +51,17 @@ namespace FractalCompression.Tools
                         (int)p.Val,
                         (int)p.Val));
             }
-            for (int t = 0; t < steps; t++)
+            for (int t = 0; t < steps*10; t++)
             {
                 for (int i = 0; i < Math.Min(steps, dMax); i++)
                 {
+                    contractivityIndex = 0;
                     for (int j = 0; j < this.interpolationPoints.Count ; j+=4)
                     {
                         int coresspondingDomain = addresses[j / 4];
                         if (coresspondingDomain != -1)
                         {
-                            double contractivityFactor = contractivityFactors[j / 4];
+                            double contractivityFactor = contractivityFactors[contractivityIndex++];
                             MyDomain md = GetDomain(coresspondingDomain);
                             Mapper mapper = new Mapper(contractivityFactor,
                                 interpolationPoints[j], md.Domain.Vertices[0],
@@ -72,20 +76,14 @@ namespace FractalCompression.Tools
                             for (int k = 0; k < md.Domain.Size * md.Domain.Size ; k++)
                             {
                                 MappedPoint[] newPoints = new MappedPoint[4];
-                                for (int ii = 0; ii < newPoints.Length; ii++)
+                                for (int ii = 0; ii < 1; ii++)
                                 {
                                     newPoints[ii] = mapper.MapPoint(prevPoints[ii].X,
                                      prevPoints[ii].Y, (double)prevVals[ii]);
                                     SafePutPixel(newPoints[ii].X, newPoints[ii].Y, (int)newPoints[ii].Val
                                              , bit);
-                               /*   SafePutPixel(newPoints[ii].X+smallDelta, newPoints[ii].Y, (int)newPoints[ii].Val
-                                             , bit);
-                                    SafePutPixel(newPoints[ii].X, newPoints[ii].Y + smallDelta, (int)newPoints[ii].Val
-                                             , bit);
-                                    SafePutPixel(newPoints[ii].X + smallDelta, newPoints[ii].Y + smallDelta, (int)newPoints[ii].Val
-                                             , bit);*/
                                 }
-                                for (int ii = 0; ii < newPoints.Length; ii++)
+                                for (int ii = 0; ii < 1; ii++)
                                 {
                                     prevPoints[ii] = newPoints[ii];
                                     prevVals[ii] = (int)newPoints[ii].Val;
@@ -95,15 +93,20 @@ namespace FractalCompression.Tools
                     }
                 }
             }
+            Console.Out.WriteLine("Bad Pixels " + badPixel + " Good Pixels " + goodPixel);
             return bit;
         }
 
         private void SafePutPixel(int x, int y,int val, Bitmap bit)
         {
+            int oldVal = val;
             if (x >= 0 && y >= 0 && x < bit.Width && y < bit.Width && val < 256 && val >= 0)
+            {
                 bit.SetPixel(x, y, Color.FromArgb(val, val, val));
+                goodPixel++;
+            }
             else
-                Console.Out.WriteLine("Invalid data in SafePutPixel: x=" + x + " y=" + y + " val=" + val);
+                badPixel++;
         }
 
         private MyDomain GetDomain(int address)
