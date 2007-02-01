@@ -51,18 +51,6 @@ namespace FractalCompression.Tools
                         (int)p.Val,
                         (int)p.Val));
             }
-            int[] dupna = new int[addresses.Count];
-            for (int i = 0; i < addresses.Count; i++)
-            {
-                if(addresses[i] != -1)
-                dupna[addresses[i]]++;
-            }
-            for (int i = 0; i < dupna.Length; i++)
-            {
-                if (dupna[i] != 0)
-                    Console.Out.Write(i + " ");
-            }
-            Console.WriteLine();
             for (int t = 0; t < steps; t++)
             {
                 for (int i = 0; i < Math.Min(steps, dMax); i++)
@@ -83,23 +71,17 @@ namespace FractalCompression.Tools
                                 (int)interpolationPoints[j + 3].Val,
                                 (int)interpolationPoints[j].Val,
                                  md.Vals[1], md.Vals[2], md.Vals[3], md.Vals[0]);
-                            Point[] prevPoints = md.Domain.Vertices;
-                            int[] prevVals = md.Vals;
+                            Point prevPoint = md.Domain.Vertices[1];
+                            int prevVal = md.Vals[1];
                             for (int k = 0; k < md.Domain.Size * md.Domain.Size ; k++)
                             {
-                                MappedPoint[] newPoints = new MappedPoint[4];
-                                for (int ii = 0; ii < 1; ii++)
-                                {
-                                    newPoints[ii] = mapper.MapPoint(prevPoints[ii].X,
-                                     prevPoints[ii].Y, (double)prevVals[ii]);
-                                    SafePutPixel(newPoints[ii].X, newPoints[ii].Y, (int)newPoints[ii].Val
+                                MappedPoint newPoint;
+                                newPoint = mapper.MapPoint(prevPoint.X,
+                                     prevPoint.Y, (double)prevVal);
+                                SafePutPixel(newPoint.X, newPoint.Y, (int)newPoint.Val
                                              , bit);
-                                }
-                                for (int ii = 0; ii < 1; ii++)
-                                {
-                                    prevPoints[ii] = newPoints[ii];
-                                    prevVals[ii] = (int)newPoints[ii].Val;
-                                }
+                                prevPoint = newPoint;
+                                prevVal = (int)newPoint.Val;          
                             }
                         }
                     }

@@ -23,14 +23,14 @@ namespace FractalCompression.Tools
             this.pi = pi;
             this.smallDelta = smallDelta;
             this.bigDelta = bigDelta;
-            this.val1 = val1 / (double)255;
-            this.val2 = val2 / (double)255;
-            this.val3 = val3 / (double)255;
-            this.val4 = val4 / (double)255;
-            this.val5 = val5 / (double)255;
-            this.val6 = val6 / (double)255;
-            this.val7 = val7 / (double)255;
-            this.val8 = val8 / (double)255;
+            this.val1 = val1;
+            this.val2 = val2;
+            this.val3 = val3;
+            this.val4 = val4;
+            this.val5 = val5;
+            this.val6 = val6;
+            this.val7 = val7;
+            this.val8 = val8;
             ComputeParameters();
         }
 
@@ -42,10 +42,10 @@ namespace FractalCompression.Tools
             l = pi.Y - pk.Y * d;
             double[] B = new double[4];
             double[,] A = new double[,] { 
-                   { val1, pk.Y, pk.X * pk.Y, 1, val5 - s * val1 },
-                   { val2, pk.Y, (pk.X+bigDelta)*(pk.Y), 1, val6 - s * val2},
-                   { val3, pk.Y+bigDelta, pk.X*(pk.Y+bigDelta), 1, val8 - s * val3},
-                   { val4, pk.Y+bigDelta, (pk.X+bigDelta)*(pk.Y+bigDelta), 1, val7 - s * val4}
+                   { pk.X, pk.Y, pk.X * pk.Y, 1, val5 - s * val1 },
+                   { pk.X + bigDelta, pk.Y, (pk.X+bigDelta)*(pk.Y), 1, val6 - s * val2},
+                   { pk.X, pk.Y+bigDelta, pk.X*(pk.Y+bigDelta), 1, val8 - s * val4},
+                   { pk.X + bigDelta, pk.Y+bigDelta, (pk.X+bigDelta)*(pk.Y+bigDelta), 1, val7 - s * val3}
             };
             if (Gauss.GaussianElimination(A, B))
             {
@@ -61,11 +61,9 @@ namespace FractalCompression.Tools
 
         public MappedPoint MapPoint(int x, int y, double val)
         {
-            double temp = val / 255;
             int mappedX = (int)(a * x + k);
             int mappedY = (int)(d * y + l);
-            double mappedVal = (e * x + g * y + h * x * y + s * temp + m);
-            mappedVal = mappedVal * 255;
+            double mappedVal = (e * x + g * y + h * x * y + s * val + m);
             return new MappedPoint(mappedX, mappedY, mappedVal);
         }
     }
