@@ -14,7 +14,7 @@ namespace FractalCompression.Tools
     {
         public static bool CheckConditionOfContinuity(Domain[,] domains, int i, int j, int a, FractalCompression.Structure.Region region, Bitmap bitmap)
         {
-            if (i<0 || j<0 || (i > domains.GetUpperBound(0)) || (j > domains.GetUpperBound(1)))
+            if (i < 0 || j < 0 || (i > domains.GetUpperBound(0)) || (j > domains.GetUpperBound(1)))
                 throw new ArgumentException("Incorrect i or j values");
 
             Domain dij = domains[i, j];
@@ -26,7 +26,7 @@ namespace FractalCompression.Tools
             double sijp1 = MNTools.ComputeContractivityFactor(dijp1, region, bitmap);
 
             //TODO: spr czy na pewno v=0 (a nie 1) i v< a-1 a nie (v<a)
-            for (int v = 1; v < a ; v++)
+            for (int v = 1; v < a; v++)
             {
                 //Console.WriteLine(sij * dij.Right(v, bitmap) + " ? " + (sip1j * dip1j.Left(v, bitmap)));
                 if ((sij * dij.Right(v, bitmap)) != (sip1j * dip1j.Left(v, bitmap)))
@@ -37,6 +37,40 @@ namespace FractalCompression.Tools
 
             return true;
         }
+
+        /*public static bool CheckConditionOfContinuity(Domain[,] domains, int i, int j, int a, FractalCompression.Structure.Region region, Bitmap bitmap)
+        {
+            if (i < 0 || j < 0 || (i > domains.GetUpperBound(0)) || (j > domains.GetUpperBound(1)))
+                throw new ArgumentException("Incorrect i or j values");
+
+            Domain dij = null, dip1j = null, dijp1 = null; 
+            dij = domains[i, j];
+            if(i+1<=domains.GetUpperBound(0))
+                dip1j = domains[i + 1, j];
+            if(j+1<=domains.GetUpperBound(1))
+                dijp1 = domains[i, j + 1];
+
+            double sij, sip1j=Double.NaN, sijp1=Double.NaN;
+            sij = MNTools.ComputeContractivityFactor(dij, region, bitmap);
+            if(dip1j!= null)
+                sip1j = MNTools.ComputeContractivityFactor(dip1j, region, bitmap);
+            if(dijp1!=null)
+                sijp1 = MNTools.ComputeContractivityFactor(dijp1, region, bitmap);
+
+            //TODO: spr czy na pewno v=0 (a nie 1) i v< a-1 a nie (v<a)
+            for (int v = 1; v < a; v++)
+            {
+                //Console.WriteLine(sij * dij.Right(v, bitmap) + " ? " + (sip1j * dip1j.Left(v, bitmap)));
+                if (dip1j != null)
+                    if ((sij * dij.Right(v, bitmap)) != (sip1j * dip1j.Left(v, bitmap)))
+                        return false;
+                if (dijp1 != null)
+                    if ((sij * dij.Up(v, bitmap)) != (sijp1 * dijp1.Down(v, bitmap)))
+                        return false;
+            }
+
+            return true;
+        }*/
 
         /// <summary>
         /// Returns parameters A,B i C of line Ax+By+C=0 crossing points p and r
@@ -245,6 +279,40 @@ namespace FractalCompression.Tools
             CompResult result = (CompResult)bf.Deserialize(fs);
             fs.Close();
             return result;
+        }
+
+        public static List<int> OptimizeAdressesList(Queue<int> aqueue, List<double> values, int maxAddress)
+        {
+            List<int> optimizedAQueue = new List<int>(aqueue);
+            List<int> toMark = new List<int>();
+            double min = -1;
+            int minIndex = -1;
+            for (int i = 0; i < maxAddress; ++i)
+            {
+                min = -1;
+                minIndex = -1;
+                for (int j = 0; j < optimizedAQueue.Count; ++j)
+                {
+                    if (optimizedAQueue[j] == i)
+                    {
+                        if (min == -1 || min > values[j])
+                        {
+                            min = values[j];
+                            minIndex = j;
+                        }
+                        toMark.Add(j);
+                        //Console.WriteLine("{4}: oaq[{0}]={1}, min={2}, minIndex={3}", j, values[j], min, minIndex, i);
+                    }
+                }
+
+                if (minIndex != -1)
+                    foreach (int ind in toMark)
+                        if (ind != minIndex)
+                            optimizedAQueue[ind] = -1;
+                toMark.Clear();
+            }
+
+            return optimizedAQueue;
         }
     }
 }

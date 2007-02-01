@@ -112,7 +112,7 @@ namespace FractalCompression
             Console.WriteLine("Preparing to decompression...");
             List<double> cfactors = new List<double>(cr.Cqueue);
             List<MappedPoint> interpPoints = new List<MappedPoint>(cr.Iqueue);
-            List<int> addresses = new List<int>(cr.Aqueue);
+            List<int> addresses = cr.Aqueue;
             Decompressor decompressor = new Decompressor(cfactors, 
                 interpPoints, addresses,
                 cr.SmallDelta, cr.BigDelta, cr.A, cr.ImageWidth, 

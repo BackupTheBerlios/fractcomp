@@ -21,6 +21,9 @@ namespace FractalCompression.Tools
         private Queue<int> aqueue;                     //addresses domain's
         private Queue<FractalCompression.Structure.Region> squeue2;
 
+        private List<double> minHQueue;
+        private List<int> optimizedAQueue;
+
         private double[,] h;
         private Domain[,] domains;
         private FractalCompression.Structure.Region[,] regions;
@@ -55,6 +58,7 @@ namespace FractalCompression.Tools
             this.bitmap = bitmap;
 
             this.h = new double[regions.Length, domains.Length];
+            this.minHQueue = new List<double>();
         }
 
         public void Compress()
@@ -80,9 +84,9 @@ namespace FractalCompression.Tools
                                 if (Math.Abs(s) >= 1)
                                     continue;
 
-                                if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
+                                /*if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
                                     if (!POTools.CheckConditionOfContinuity(domains, i, j, a, r, bitmap))
-                                        continue;
+                                        continue;*/
 
                                Point pk = dom.Vertices[1], pi = r.Vertices[1];
                                 Mapper mapper = new Mapper(s, pk, pi, smallDelta, bigDelta,
@@ -102,7 +106,7 @@ namespace FractalCompression.Tools
                         }
 
                     /*for (int j = 0; j < nh.Length; j++)
-                        Console.Write(nh[j] + ", ");
+                        Console.Write(nh[j] + " ");
                     Console.WriteLine();*/
 
                     int minHj = 0;
@@ -127,15 +131,22 @@ namespace FractalCompression.Tools
                     }
                     //Console.WriteLine("minH = {0} - nh[{1}]", minH, minHj);
 
-                    if (minH > eps && d < dmax)
+                    if ((minH > eps || minH==-1) && d < dmax)
                     {
                         DivideRegion(r);
                         aqueue.Enqueue(-1);
+                        minHQueue.Add(minH);
                     }
-                    else if (minHj >= 0)   //store j with the min distance inside aqueue and s inside cqueue
+                    else if (minH >= 0)   //store j with the min distance inside aqueue and s inside cqueue
                     {
+                        //Console.WriteLine("minHj: {0}, s: {1}", minHj, s);
+                        /*for (int j = 0; j < nh.Length; j++)
+                            Console.Write((int)nh[j] + " ");
+                        Console.WriteLine();*/
+                        
                         aqueue.Enqueue(minHj);
                         cqueue.Enqueue(s);
+                        minHQueue.Add(minH);
                     }
                 }
 
@@ -145,6 +156,8 @@ namespace FractalCompression.Tools
                     d++;
                 }
             } while (squeue.Count != 0);
+
+            this.optimizedAQueue = POTools.OptimizeAdressesList(aqueue, minHQueue, domains.Length - 1);
         }
 
         private void DivideRegion(FractalCompression.Structure.Region r)
@@ -178,7 +191,13 @@ namespace FractalCompression.Tools
         public void SaveToFile(String filepath)
         {
             //store dmax, smallDelta, bigDelta, cqueue, iqueue, aqueue
-            CompResult results = new CompResult(aqueue, cqueue, iqueue, bigDelta, smallDelta, a, dmax,bitmap.Width,bitmap.Height);
+            List<int> aqueueList = null;
+            if (this.optimizedAQueue != null)
+                aqueueList = optimizedAQueue;
+            else
+                aqueueList = new List<int>(this.aqueue);
+
+            CompResult results = new CompResult(aqueueList, cqueue, iqueue, bigDelta, smallDelta, a, dmax,bitmap.Width,bitmap.Height);
             BinaryFormatter bf = new BinaryFormatter();
             FileStream fs = new FileStream(filepath, FileMode.Create);
             bf.Serialize(fs, results);
