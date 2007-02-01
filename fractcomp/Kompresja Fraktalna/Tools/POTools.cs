@@ -301,7 +301,7 @@ namespace FractalCompression.Tools
                             minIndex = j;
                         }
                         toMark.Add(j);
-                        //Console.WriteLine("{4}: oaq[{0}]={1}, min={2}, minIndex={3}", j, values[j], min, minIndex, i);
+                        Console.WriteLine("{4}: oaq[{0}]={1}, min={2}, minIndex={3}", j, values[j], min, minIndex, i);
                     }
                 }
 
