@@ -63,12 +63,13 @@ namespace FractalCompression.Tools
             {
                 double s = 0;
                 double[] nh = new double[domains.Length];
-                for (int i = 0; i < nh.Length; ++i)
-                    nh[i] = -1;
 
                 while (squeue.Count != 0)
                 {
                     FractalCompression.Structure.Region r = squeue.Dequeue();
+                    for (int i = 0; i < nh.Length; ++i)
+                        nh[i] = -1;
+
                     for (int i = 0; i <= domains.GetUpperBound(0); i++)
                         for (int j = 0; j <= domains.GetUpperBound(1); j++)
                         {
@@ -100,9 +101,9 @@ namespace FractalCompression.Tools
                             }
                         }
 
-                    for (int j = 0; j < nh.Length; j++)
+                    /*for (int j = 0; j < nh.Length; j++)
                         Console.Write(nh[j] + ", ");
-                    Console.WriteLine();
+                    Console.WriteLine();*/
 
                     int minHj = 0;
                     double minH = nh[0];
