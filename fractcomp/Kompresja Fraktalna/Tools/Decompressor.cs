@@ -51,7 +51,19 @@ namespace FractalCompression.Tools
                         (int)p.Val,
                         (int)p.Val));
             }
-            for (int t = 0; t < steps*10; t++)
+            int[] dupna = new int[addresses.Count];
+            for (int i = 0; i < addresses.Count; i++)
+            {
+                if(addresses[i] != -1)
+                dupna[addresses[i]]++;
+            }
+            for (int i = 0; i < dupna.Length; i++)
+            {
+                if (dupna[i] != 0)
+                    Console.Out.Write(i + " ");
+            }
+            Console.WriteLine();
+            for (int t = 0; t < steps; t++)
             {
                 for (int i = 0; i < Math.Min(steps, dMax); i++)
                 {
