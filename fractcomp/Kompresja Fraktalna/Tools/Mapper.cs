@@ -63,7 +63,7 @@ namespace FractalCompression.Tools
         {
             int mappedX = (int)(a * x + k);
             int mappedY = (int)(d * y + l);
-            double mappedVal = (e * x + g * y + h * x * y + s * val + m);
+            double mappedVal = (int)(e * x + g * y + h * x * y + s * val + m);
             return new MappedPoint(mappedX, mappedY, mappedVal);
         }
     }

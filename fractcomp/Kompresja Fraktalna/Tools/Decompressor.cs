@@ -63,7 +63,7 @@ namespace FractalCompression.Tools
                         {
                             double contractivityFactor = contractivityFactors[contractivityIndex++];
                             MyDomain md = GetDomain(coresspondingDomain);
-                            Mapper mapper = new Mapper(contractivityFactor,
+                            Mapper mapper = new Mapper(1/contractivityFactor,
                                 interpolationPoints[j], md.Domain.Vertices[0],
                                 this.smallDelta, this.bigDelta,
                                 (int)interpolationPoints[j + 1].Val,
@@ -72,7 +72,7 @@ namespace FractalCompression.Tools
                                 (int)interpolationPoints[j].Val,
                                  md.Vals[1], md.Vals[2], md.Vals[3], md.Vals[0]);
                             Point prevPoint = md.Domain.Vertices[1];
-                            int prevVal = md.Vals[1];
+                            int prevVal = md.Vals[0];
                             for (int k = 0; k < md.Domain.Size * md.Domain.Size ; k++)
                             {
                                 MappedPoint newPoint;
@@ -80,6 +80,10 @@ namespace FractalCompression.Tools
                                      prevPoint.Y, (double)prevVal);
                                 SafePutPixel(newPoint.X, newPoint.Y, (int)newPoint.Val
                                              , bit);
+                                if (prevPoint.X == newPoint.X &&
+                                    prevPoint.Y == newPoint.Y &&
+                                    prevVal == newPoint.Val)
+                                    break;
                                 prevPoint = newPoint;
                                 prevVal = (int)newPoint.Val;          
                             }
