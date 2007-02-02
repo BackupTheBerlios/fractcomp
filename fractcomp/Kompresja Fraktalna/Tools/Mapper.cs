@@ -43,9 +43,9 @@ namespace FractalCompression.Tools
             double[] B = new double[4];
             double[,] A = new double[,] { 
                    { pk.X, pk.Y, pk.X * pk.Y, 1, val5 - s * val1 },
-                   { pk.X + bigDelta, pk.Y, (pk.X+bigDelta)*(pk.Y), 1, val6 - s * val2},
-                   { pk.X, pk.Y+bigDelta, pk.X*(pk.Y+bigDelta), 1, val8 - s * val4},
-                   { pk.X + bigDelta, pk.Y+bigDelta, (pk.X+bigDelta)*(pk.Y+bigDelta), 1, val7 - s * val3}
+                   { pk.X + bigDelta - 1, pk.Y, (pk.X + bigDelta - 1)*(pk.Y), 1, val6 - s * val2},
+                   { pk.X, pk.Y + bigDelta - 1, pk.X*(pk.Y+bigDelta - 1), 1, val8 - s * val4},
+                   { pk.X + bigDelta - 1, pk.Y + bigDelta - 1, (pk.X + bigDelta - 1)*(pk.Y + bigDelta -1), 1, val7 - s * val3}
             };
             if (Gauss.GaussianElimination(A, B))
             {

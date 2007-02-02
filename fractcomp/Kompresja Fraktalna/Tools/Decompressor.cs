@@ -19,6 +19,7 @@ namespace FractalCompression.Tools
         private int realSize;
         private int goodPixel = 0;
         private int badPixel = 0;
+        private int interPixel = 0;
 
         public Decompressor(List<double> contrctivtyFactors,
             List<MappedPoint> interpolationPoints, List<int> addresses,
@@ -34,14 +35,14 @@ namespace FractalCompression.Tools
             this.height = height;
             this.dMax = dMax;
             this.realSize = width / smallDelta;
-    
+
         }
 
         public Bitmap DecompressImage()
         {
             int steps = (int)Math.Truncate(Math.Log(smallDelta, 2) / Math.Log(a, 2));
             int contractivityIndex = 0;
-            Bitmap bit = new Bitmap(width, height, 
+            Bitmap bit = new Bitmap(width, height,
                 System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             foreach (MappedPoint p in interpolationPoints)
@@ -50,20 +51,21 @@ namespace FractalCompression.Tools
                         Color.FromArgb((int)p.Val,
                         (int)p.Val,
                         (int)p.Val));
+                interPixel++;
             }
             for (int t = 0; t < steps; t++)
             {
                 for (int i = 0; i < Math.Min(steps, dMax); i++)
                 {
                     contractivityIndex = 0;
-                    for (int j = 0; j < this.interpolationPoints.Count ; j+=4)
+                    for (int j = 0; j < this.interpolationPoints.Count; j += 4)
                     {
                         int coresspondingDomain = addresses[j / 4];
                         if (coresspondingDomain != -1)
                         {
                             double contractivityFactor = contractivityFactors[contractivityIndex++];
                             MyDomain md = GetDomain(coresspondingDomain);
-                            Mapper mapper = new Mapper(1/contractivityFactor,
+                            Mapper mapper = new Mapper(contractivityFactor,
                                 interpolationPoints[j], md.Domain.Vertices[0],
                                 this.smallDelta, this.bigDelta,
                                 (int)interpolationPoints[j + 1].Val,
@@ -73,7 +75,7 @@ namespace FractalCompression.Tools
                                  md.Vals[1], md.Vals[2], md.Vals[3], md.Vals[0]);
                             Point prevPoint = md.Domain.Vertices[1];
                             int prevVal = md.Vals[0];
-                            for (int k = 0; k < md.Domain.Size * md.Domain.Size ; k++)
+                            for (int k = 0; k < md.Domain.Size * md.Domain.Size; k++)
                             {
                                 MappedPoint newPoint;
                                 newPoint = mapper.MapPoint(prevPoint.X,
@@ -85,19 +87,46 @@ namespace FractalCompression.Tools
                                     prevVal == newPoint.Val)
                                     break;
                                 prevPoint = newPoint;
-                                prevVal = (int)newPoint.Val;          
+                                prevVal = (int)newPoint.Val;
                             }
                         }
                     }
                 }
             }
-            Console.Out.WriteLine("Bad Pixels " + badPixel + " Good Pixels " + goodPixel);
+            Console.Out.WriteLine("Bad Pixels " + badPixel + " Good Pixels " + goodPixel + " Interpolationpixel " + interPixel);
             return bit;
         }
 
-        private void SafePutPixel(int x, int y,int val, Bitmap bit)
+        public Bitmap DecompressImageExperimentalVersion()
         {
-            int oldVal = val;
+            Bitmap bit = new Bitmap(width, height,
+                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            foreach (MappedPoint p in interpolationPoints)
+            {
+                bit.SetPixel(p.X, p.Y,
+                        Color.FromArgb((int)p.Val,
+                        (int)p.Val,
+                        (int)p.Val));
+                interPixel++;
+            }
+            for (int j = 0; j < this.interpolationPoints.Count; j += 4)
+            {
+                    for (int ww = interpolationPoints[j + 1].X; ww <= interpolationPoints[j + 2].X; ww++)
+                        for (int hh = interpolationPoints[j + 1].Y; hh <= interpolationPoints[j].Y; hh++)
+                        {
+                            if ((ww != interpolationPoints[j + 1].X && hh != interpolationPoints[j + 1].Y) ||
+                                (ww != interpolationPoints[j + 2].X && hh != interpolationPoints[j + 1].Y) ||
+                                (ww != interpolationPoints[j + 1].X && hh != interpolationPoints[j].Y) ||
+                                (ww != interpolationPoints[j + 2].X && hh != interpolationPoints[j].Y)
+                            )
+                                SafePutPixel(ww, hh, (int)interpolationPoints[j + 1].Val, bit);
+                        }
+            }
+            return bit;
+        }
+
+        private void SafePutPixel(int x, int y, int val, Bitmap bit)
+        {
             if (x >= 0 && y >= 0 && x < bit.Width && y < bit.Width && val < 256 && val >= 0)
             {
                 bit.SetPixel(x, y, Color.FromArgb(val, val, val));
@@ -114,7 +143,7 @@ namespace FractalCompression.Tools
             int domainX = (address / numberOfDomainInWidth) * this.bigDelta;
             int domainY = (address % numberOfDomainInHeight) * this.bigDelta;
             MyDomain md = null;
-            for (int i = 0; i < this.interpolationPoints.Count; i+=4)
+            for (int i = 0; i < this.interpolationPoints.Count; i += 4)
             {
                 if (domainX == interpolationPoints[i + 1].X &&
                     domainY == interpolationPoints[i + 1].Y)
