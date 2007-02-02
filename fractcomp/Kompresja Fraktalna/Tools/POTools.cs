@@ -179,6 +179,16 @@ namespace FractalCompression.Tools
                     mp[3] = CreateMappedPoint(bitmap, eastX + smallDelta - 1, northY + smallDelta - 1);
                     for (int k = 0; k < mp.Length; ++k)
                         interpolPoints.Add(mp[k]);
+                    
+                    /*interpolPoints.Add(mp[1]);
+                    if (j == regionsInRow - 1)
+                        interpolPoints.Add(mp[2]);
+                    if (i == regionsInColumn - 1)
+                    {
+                        interpolPoints.Add(mp[0]);
+                        if (j == regionsInRow - 1)
+                            interpolPoints.Add(mp[3]);
+                    }*/
 
                     regions[i, j] = new FractalCompression.Structure.Region(mp);
                     eastX += smallDelta;
@@ -186,6 +196,7 @@ namespace FractalCompression.Tools
                 northY += smallDelta;
             }
 
+            Console.WriteLine(interpolPoints.Count +" interpolation points prepared");
             return regions;
         }
 
@@ -301,7 +312,7 @@ namespace FractalCompression.Tools
                             minIndex = j;
                         }
                         toMark.Add(j);
-                        Console.WriteLine("{4}: oaq[{0}]={1}, min={2}, minIndex={3}", j, values[j], min, minIndex, i);
+                        //Console.WriteLine("{4}: oaq[{0}]={1}, min={2}, minIndex={3}", j, values[j], min, minIndex, i);
                     }
                 }
 

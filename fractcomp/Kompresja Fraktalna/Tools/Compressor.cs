@@ -181,11 +181,28 @@ namespace FractalCompression.Tools
             {
                 squeue2.Enqueue(nRegs[i]);
                 for (int j = 0; j < 4; j++)
-                {
+                    AddInterpolationPoint(nRegs[i], j, bitmap);
+                /*{
                     Point vert = nRegs[i].Vertices[j];
                     iqueue.Enqueue(new MappedPoint(vert.X, vert.Y, MNTools.GetBitmapValue(vert.X, vert.Y, bitmap)));
-                }
+                }*/
+                
+                /*AddInterpolationPoint(nRegs[0], 0, bitmap);
+                AddInterpolationPoint(nRegs[0], 1, bitmap);
+                AddInterpolationPoint(nRegs[1], 1, bitmap);
+                AddInterpolationPoint(nRegs[2], 1, bitmap);
+                AddInterpolationPoint(nRegs[2], 2, bitmap);
+                for(int j=0; j<4; ++j)
+                    AddInterpolationPoint(nRegs[3], j, bitmap);*/
             }
+        }
+
+        private void AddInterpolationPoint(FractalCompression.Structure.Region r, int verticeNo, Bitmap bitmap)
+        {
+            if (verticeNo < 0 || verticeNo > 3)
+                throw new Exception("Incorrect vertice number");
+            Point vert = r.Vertices[verticeNo];
+            iqueue.Enqueue(new MappedPoint(vert.X, vert.Y, MNTools.GetBitmapValue(vert.X, vert.Y, bitmap)));
         }
 
         public void SaveToFile(String filepath)
