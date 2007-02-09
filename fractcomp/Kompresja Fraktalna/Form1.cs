@@ -13,6 +13,8 @@ namespace FractalCompression
     public partial class Form1 : Form
     {
         private Bitmap bitmap;
+        private Bitmap bitmapWithGrid;
+        private Bitmap tempBitmap;
         Settings set = new Settings();
 
         public Form1()
@@ -85,7 +87,7 @@ namespace FractalCompression
                 cr.SmallDelta, cr.BigDelta, cr.A, cr.ImageWidth, cr.ImageHeight, cr.DMax);
 
             Console.WriteLine("Decompressing image...");
-            return decompressor.DecompressImage();
+            return decompressor.DecompressImage(out bitmapWithGrid);
         }
 
         private void Compress(Bitmap bitmap, int bigDelta, int a, String filepath)
@@ -118,8 +120,7 @@ namespace FractalCompression
                 cr.SmallDelta, cr.BigDelta, cr.A, cr.ImageWidth, 
                 cr.ImageHeight, cr.DMax);
             Console.WriteLine("Decompressing image...");
-            return decompressor.DecompressImage();
-            //return decompressor.DecompressImageExperimentalVersion();
+            return decompressor.DecompressImage(out bitmapWithGrid);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -147,10 +148,7 @@ namespace FractalCompression
 
         private void settinsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (set.ShowDialog() == DialogResult.OK && bitmap != null)
-            {
-                bitmap = MNTools.RescaleBitmap((Image)bitmap);
-            }
+            
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -182,6 +180,33 @@ namespace FractalCompression
         private void imageOpenFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
 
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (set.ShowDialog() == DialogResult.OK && bitmap != null)
+            {
+                bitmap = MNTools.RescaleBitmap((Image)bitmap);
+            }
+        }
+
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.gridToolStripMenuItem.Checked)
+            {
+                this.gridToolStripMenuItem.Checked = false;
+                if (this.tempBitmap != null)
+                    this.compresedPictureBox.Image = this.tempBitmap;
+            }
+            else
+            {
+                this.gridToolStripMenuItem.Checked = true;
+                if (this.bitmapWithGrid != null)
+                {
+                    this.tempBitmap = (Bitmap)this.compresedPictureBox.Image;
+                    this.compresedPictureBox.Image = this.bitmapWithGrid;
+                }
+            }
         }
     }
 }

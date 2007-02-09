@@ -38,7 +38,7 @@ namespace FractalCompression.Tools
 
         }
 
-        public Bitmap DecompressImage()
+        public Bitmap DecompressImage(out Bitmap bitmapWithGrid)
         {
             int steps = (int)Math.Truncate(Math.Log(smallDelta, 2) / Math.Log(a, 2));
             int contractivityIndex = 0;
@@ -93,34 +93,19 @@ namespace FractalCompression.Tools
                     }
                 }
             }
-            Console.Out.WriteLine("Bad Pixels " + badPixel + " Good Pixels " + goodPixel + " Interpolationpixel " + interPixel);
-            return bit;
-        }
-
-        public Bitmap DecompressImageExperimentalVersion()
-        {
-            Bitmap bit = new Bitmap(width, height,
-                System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            foreach (MappedPoint p in interpolationPoints)
+            bitmapWithGrid = (Bitmap)bit.Clone();
+            for (int i = 0; i < interpolationPoints.Count; i += 4)
             {
-                bit.SetPixel(p.X, p.Y,
-                        Color.FromArgb((int)p.Val,
-                        (int)p.Val,
-                        (int)p.Val));
-                interPixel++;
-            }
-            for (int j = 0; j < this.interpolationPoints.Count; j += 4)
-            {
-                    for (int ww = interpolationPoints[j + 1].X; ww <= interpolationPoints[j + 2].X; ww++)
-                        for (int hh = interpolationPoints[j + 1].Y; hh <= interpolationPoints[j].Y; hh++)
-                        {
-                            if ((ww != interpolationPoints[j + 1].X && hh != interpolationPoints[j + 1].Y) ||
-                                (ww != interpolationPoints[j + 2].X && hh != interpolationPoints[j + 1].Y) ||
-                                (ww != interpolationPoints[j + 1].X && hh != interpolationPoints[j].Y) ||
-                                (ww != interpolationPoints[j + 2].X && hh != interpolationPoints[j].Y)
-                            )
-                                SafePutPixel(ww, hh, (int)interpolationPoints[j + 1].Val, bit);
-                        }
+                for (int k = interpolationPoints[i + 1].Y; k < interpolationPoints[i].Y; k++)
+                {
+                    bitmapWithGrid.SetPixel(interpolationPoints[i + 1].X, k, Color.Red);
+                    bitmapWithGrid.SetPixel(interpolationPoints[i + 2].X, k, Color.Red);
+                }
+                for (int k = interpolationPoints[i + 1].X; k < interpolationPoints[i + 2].X; k++)
+                {
+                    bitmapWithGrid.SetPixel(k, interpolationPoints[i + 1].Y, Color.Red);
+                    bitmapWithGrid.SetPixel(k, interpolationPoints[i].Y, Color.Red);
+                }
             }
             return bit;
         }

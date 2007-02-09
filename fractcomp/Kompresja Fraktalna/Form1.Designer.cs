@@ -42,6 +42,8 @@ namespace FractalCompression
             this.imageOpenFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -109,9 +111,12 @@ namespace FractalCompression
             // 
             // settinsToolStripMenuItem
             // 
+            this.settinsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gridToolStripMenuItem,
+            this.settingsToolStripMenuItem});
             this.settinsToolStripMenuItem.Name = "settinsToolStripMenuItem";
-            this.settinsToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
-            this.settinsToolStripMenuItem.Text = "&Settings";
+            this.settinsToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.settinsToolStripMenuItem.Text = "&Options";
             this.settinsToolStripMenuItem.Click += new System.EventHandler(this.settinsToolStripMenuItem_Click);
             // 
             // splitContainer1
@@ -170,6 +175,20 @@ namespace FractalCompression
             // 
             this.openFileDialog1.Filter = "Fractal Compression Image | *.nofc";
             // 
+            // gridToolStripMenuItem
+            // 
+            this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
+            this.gridToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gridToolStripMenuItem.Text = "&Grid";
+            this.gridToolStripMenuItem.Click += new System.EventHandler(this.gridToolStripMenuItem_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Text = "&Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -210,6 +229,8 @@ namespace FractalCompression
         private System.Windows.Forms.ToolStripMenuItem viewToolStripMenuItem2;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
 

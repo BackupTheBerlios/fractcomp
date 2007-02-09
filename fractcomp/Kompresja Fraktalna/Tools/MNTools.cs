@@ -91,7 +91,7 @@ namespace FractalCompression.Tools
         }
 
 
-        public static int ComputeDistance(FractalCompression.Structure.Region mappedRegion, 
+        public static double ComputeDistance(FractalCompression.Structure.Region mappedRegion, 
             FractalCompression.Structure.Region region, Bitmap bitmap)
         {
             int h = 0;
@@ -104,8 +104,8 @@ namespace FractalCompression.Tools
                 }
             }
             if (h < 0)
-                return Int32.MaxValue;
-            return h;
+                return Int32.MaxValue ;
+            return h / (double)(region.Size * region.Size);
         }
 
         private static int DistanceMeasure(double  val1, double val2)
