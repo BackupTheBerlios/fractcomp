@@ -33,7 +33,10 @@ namespace FractalCompression.Tools
             this.val7 = val7;
             this.val8 = val8;
             this.reverse = reverse;
-            ComputeParameters();
+            if (reverse)
+                ComputeParametersForReverse();
+            else
+                ComputeParameters();
         }
 
         private void ComputeParameters()
@@ -58,6 +61,31 @@ namespace FractalCompression.Tools
             }
             else
                throw new Exception("Macierz osobliwa");
+
+        }
+
+        private void ComputeParametersForReverse()
+        {
+            a = smallDelta / (double)bigDelta;
+            k = pk.X - pi.X * a;
+            d = a;
+            l = pk.Y - pi.Y * d;
+            double[] B = new double[4];
+            double[,] A = new double[,] { 
+                   { pi.X, pi.Y, pi.X * pi.Y, 1, val5 - s * val1 },
+                   { pi.X + bigDelta - 1, pi.Y, (pi.X + bigDelta - 1)*(pi.Y), 1, val6 - s * val2},
+                   { pi.X, pi.Y + bigDelta - 1, pi.X*(pi.Y+bigDelta - 1), 1, val8 - s * val4},
+                   { pi.X + bigDelta - 1, pi.Y + bigDelta - 1, (pi.X + bigDelta - 1)*(pi.Y + bigDelta -1), 1, val7 - s * val3}
+            };
+            if (Gauss.GaussianElimination(A, B))
+            {
+                e = B[0];
+                g = B[1];
+                h = B[2];
+                m = B[3];
+            }
+            else
+                throw new Exception("Macierz osobliwa");
 
         }
 

@@ -93,6 +93,7 @@ namespace FractalCompression.Tools
                     }
                 }
             }
+            Console.Out.WriteLine(goodPixel + " " + badPixel);
             bitmapWithGrid = (Bitmap)bit.Clone();
             for (int i = 0; i < interpolationPoints.Count; i += 4)
             {
