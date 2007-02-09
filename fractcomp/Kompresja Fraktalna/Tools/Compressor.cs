@@ -97,7 +97,7 @@ namespace FractalCompression.Tools
                                     MNTools.GetBitmapValue(pi.X, pi.Y, bitmap), 
                                     MNTools.GetBitmapValue(pi.X + r.Size, pi.Y, bitmap),
                                     MNTools.GetBitmapValue(pi.X , pi.Y + r.Size, bitmap), 
-                                    MNTools.GetBitmapValue(pi.X + r.Size, pi.Y + r.Size, bitmap));
+                                    MNTools.GetBitmapValue(pi.X + r.Size, pi.Y + r.Size, bitmap), false);
 
                                 FractalCompression.Structure.Region mappedRegion = POTools.MapDomainToRegion(dom, r, bitmap, mapper, a);
                                 nh[(domains.GetUpperBound(0)+1) * i + j] = MNTools.ComputeDistance(mappedRegion, r, bitmap);

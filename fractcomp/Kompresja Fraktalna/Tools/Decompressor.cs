@@ -66,13 +66,13 @@ namespace FractalCompression.Tools
                             double contractivityFactor = contractivityFactors[contractivityIndex++];
                             MyDomain md = GetDomain(coresspondingDomain);
                             Mapper mapper = new Mapper(contractivityFactor,
-                                interpolationPoints[j], md.Domain.Vertices[0],
+                                md.Domain.Vertices[0], interpolationPoints[j],
                                 this.smallDelta, this.bigDelta,
+                                md.Vals[1], md.Vals[2], md.Vals[3], md.Vals[0],
                                 (int)interpolationPoints[j + 1].Val,
                                 (int)interpolationPoints[j + 2].Val,
                                 (int)interpolationPoints[j + 3].Val,
-                                (int)interpolationPoints[j].Val,
-                                 md.Vals[1], md.Vals[2], md.Vals[3], md.Vals[0]);
+                                (int)interpolationPoints[j].Val, true);
                             Point prevPoint = md.Domain.Vertices[1];
                             int prevVal = md.Vals[0];
                             for (int k = 0; k < md.Domain.Size * md.Domain.Size; k++)

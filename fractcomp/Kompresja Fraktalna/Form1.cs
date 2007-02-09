@@ -27,7 +27,7 @@ namespace FractalCompression
         private void myTestFun()
         {
             Mapper map = new Mapper(0.9, new Point(10, 10), new Point(5, 5),
-                4, 16, 10, 11, 12, 13, 14, 15, 16, 17);
+                4, 16, 10, 11, 12, 13, 14, 15, 16, 17, false);
             MappedPoint mp = map.MapPoint(11, 10, 20);
             Bitmap bitmap = (Bitmap)Bitmap.FromFile(@"C:\Documents and Settings\Marcin\Pulpit\lena.jpg");
             int sdelta = 4;
