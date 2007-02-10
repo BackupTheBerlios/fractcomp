@@ -117,7 +117,7 @@ namespace FractalCompression.Tools
                     mappedVals[0, 0] = MNTools.GetBitmapValue(region.Vertices[1].X, region.Vertices[1].Y, bitmap);
                     for (int j = 1; j < bigDelta; ++j)
                     {
-                        x += a * j;
+                        x += a;
                         if (x > domainMaxX)
                             break;
                         MappedPoint mp = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap));
@@ -130,7 +130,7 @@ namespace FractalCompression.Tools
                     mappedVals[0, smallDelta - 1] = MNTools.GetBitmapValue(region.Vertices[0].X, region.Vertices[0].Y, bitmap);
                     for (int j = 1; j < bigDelta; ++j)
                     {
-                        x += a * j;
+                        x += a;
                         if (x > domainMaxX)
                             break;
                         MappedPoint mp = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap));
@@ -142,7 +142,7 @@ namespace FractalCompression.Tools
                 {
                     for (int j = 0; j < bigDelta; ++j)
                     {
-                        x += a * j;
+                        x += a;
                         if (x > domainMaxX)
                             break;
                         MappedPoint mp = mapper.MapPoint(x, y, MNTools.GetBitmapValue(x, y, bitmap));
