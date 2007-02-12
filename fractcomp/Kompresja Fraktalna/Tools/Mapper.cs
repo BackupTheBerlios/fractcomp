@@ -92,21 +92,32 @@ namespace FractalCompression.Tools
         public MappedPoint MapPoint(int x, int y, double val)
         {
             int mappedX;
+            double orgX;
+            double orgY;
             int mappedY;
             double mappedVal;
             if (!reverse)
             {
-                mappedX = (int)(a * x + k);
-                mappedY = (int)(d * y + l);
+                orgX = (a * x + k);
+                orgY = (d * y + l);
+                mappedX = (int)(orgX);
+                mappedY = (int)(orgY);
+
                 mappedVal = (int)(e * x + g * y + h * x * y + s * val + m);
             }
             else
             {
-                mappedX = (int)(x * (1 / a) - k);
-                mappedY = (int)(y * (1 / d) - l);
+                orgX = (x * (1 / a) - k);
+                orgY = (y * (1 / d) - l);
+                mappedX = (int)orgX;
+                mappedY = (int)orgY;
                 mappedVal = (int)(val - (e * x + g * y + h * x * y + m)) / s;
             }
-            return new MappedPoint(mappedX, mappedY, mappedVal);
+          //  Console.Out.WriteLine(x + " " + y +" "+ val+"--->" + mappedX + " " + mappedY+" "+mappedVal);
+            MappedPoint mapPoint = new MappedPoint(mappedX, mappedY, mappedVal);
+            mapPoint.OriginalX = orgX;
+            mapPoint.OriginalY = orgY;
+            return mapPoint;
         }
     }
 }

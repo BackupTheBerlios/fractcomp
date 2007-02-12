@@ -22,7 +22,7 @@ namespace FractalCompression.Tools
         private Queue<FractalCompression.Structure.Region> squeue2;
 
         private List<double> minHQueue;
-        private List<int> optimizedAQueue;
+        private List<int> optimizedAQueue = null;
 
         private double[,] h;
         private Domain[,] domains;
@@ -81,12 +81,17 @@ namespace FractalCompression.Tools
                             if (dom != null)
                             {
                                 s = MNTools.ComputeContractivityFactor(dom, r, bitmap);
-                                if (Math.Abs(s) >= 1)
-                                    continue;
 
-                                if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
+                                if (Math.Abs(s) >= 1)
+                                {
+                                    aqueue.Enqueue(-1);
+                                    cqueue.Enqueue(-1);
+                                    continue;
+                                }
+
+                             /*   if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
                                     if (!POTools.CheckConditionOfContinuity(domains, i, j, a, r, bitmap))
-                                        continue;
+                                        continue;*/
 
                                Point pk = dom.Vertices[1], pi = r.Vertices[1];
                                 Mapper mapper = new Mapper(s, pk, pi, smallDelta, bigDelta,
@@ -135,6 +140,7 @@ namespace FractalCompression.Tools
                     {
                         DivideRegion(r);
                         aqueue.Enqueue(-1);
+                        cqueue.Enqueue(-1);
                         minHQueue.Add(minH);
                     }
                     else if (minH >= 0)   //store j with the min distance inside aqueue and s inside cqueue
@@ -157,7 +163,7 @@ namespace FractalCompression.Tools
                 }
             } while (squeue.Count != 0);
 
-            this.optimizedAQueue = POTools.OptimizeAdressesList(aqueue, minHQueue, domains.Length - 1);
+            //this.optimizedAQueue = POTools.OptimizeAdressesList(aqueue, minHQueue, domains.Length - 1);
         }
 
         private void DivideRegion(FractalCompression.Structure.Region r)

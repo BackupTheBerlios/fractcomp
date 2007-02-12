@@ -120,7 +120,8 @@ namespace FractalCompression
                 cr.SmallDelta, cr.BigDelta, cr.A, cr.ImageWidth, 
                 cr.ImageHeight, cr.DMax);
             Console.WriteLine("Decompressing image...");
-            return decompressor.DecompressImage(out bitmapWithGrid);
+            //return decompressor.DecompressImage(out bitmapWithGrid);
+            return decompressor.DecompressImageVerII(out bitmapWithGrid);
         }
 
         private void Form1_Load(object sender, EventArgs e)

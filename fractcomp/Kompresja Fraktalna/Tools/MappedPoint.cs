@@ -9,6 +9,19 @@ namespace FractalCompression.Tools
     class MappedPoint
     {
         private int x, y;
+        private double originalX, originalY;
+
+        public double OriginalY
+        {
+            get { return originalY; }
+            set { originalY = value; }
+        }
+
+        public double OriginalX
+        {
+            get { return originalX; }
+            set { originalX = value; }
+        }
         private double val;
 
         public double Val
@@ -39,7 +52,7 @@ namespace FractalCompression.Tools
             this.val = val;
         }
 
-        public int CompareTo(Object obj)
+        public double CompareTo(Object obj)
         {
             if (obj.GetType() != this.GetType())
                 throw new ArgumentException();
