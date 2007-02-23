@@ -191,7 +191,7 @@ namespace FractalCompression.Tools
                 domainsPoints[i] = new Queue<MappedPoint>();
             for (int i = 0; i < interpolationPoints.Count; i += 4)
             {
-                if (addresses[i / 4] != -1)
+                //if (addresses[i / 4] != -1)
                 {
                     int counter = FindDomainByPoint(interpolationPoints[i + 1]);
                     if(counter != -1)
@@ -274,6 +274,7 @@ namespace FractalCompression.Tools
                         {
                             
                             MappedPoint point = domainsPoints[address].Dequeue();
+                            domainsPoints[address].Enqueue(point);
                             MappedPoint newPoint = mapper.MapPoint(point.X, point.Y, point.Val);
                             MappedPoint[] mapPoints = ConvertMappedPoint(newPoint);
                             for(int k=0;k<mapPoints.Length;k++)

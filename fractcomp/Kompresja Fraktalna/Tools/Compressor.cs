@@ -63,11 +63,13 @@ namespace FractalCompression.Tools
 
         public void Compress()
         {
+            int contErr = 0, divErr=0;
             do
             {
                 double s = 0;
                 double[] nh = new double[domains.Length];
 
+                Random rand = new Random();
                 while (squeue.Count != 0)
                 {
                     FractalCompression.Structure.Region r = squeue.Dequeue();
@@ -81,11 +83,13 @@ namespace FractalCompression.Tools
                             if (dom != null)
                             {
                                 s = MNTools.ComputeContractivityFactor(dom, r, bitmap);
+                                //s = rand.NextDouble();
 
                                 if (Math.Abs(s) >= 1)
                                 {
-                                    aqueue.Enqueue(-1);
-                                    cqueue.Enqueue(-1);
+                                    //aqueue.Enqueue(-1);
+                                    //cqueue.Enqueue(-1);
+                                    //Console.WriteLine("csErr: " + contErr++);
                                     continue;
                                 }
 
@@ -141,6 +145,7 @@ namespace FractalCompression.Tools
                         DivideRegion(r);
                         aqueue.Enqueue(-1);
                         cqueue.Enqueue(-1);
+                        //Console.WriteLine("divErr: " + divErr++);
                         minHQueue.Add(minH);
                     }
                     else if (minH >= 0)   //store j with the min distance inside aqueue and s inside cqueue
