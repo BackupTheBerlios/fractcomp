@@ -226,10 +226,40 @@ namespace FractalCompression.Tools
                 aqueueList = new List<int>(this.aqueue);
 
             CompResult results = new CompResult(aqueueList, cqueue, iqueue, bigDelta, smallDelta, a, dmax,bitmap.Width,bitmap.Height);
-            BinaryFormatter bf = new BinaryFormatter();
-            FileStream fs = new FileStream(filepath, FileMode.Create);
-            bf.Serialize(fs, results);
-            fs.Close();
+            StreamWriter sw = new StreamWriter(filepath);
+            sw.WriteLine(bigDelta);
+            sw.WriteLine(smallDelta);
+            sw.WriteLine(a);
+            sw.WriteLine(dmax);
+            sw.WriteLine(bitmap.Width);
+            sw.WriteLine(bitmap.Height);
+            sw.WriteLine(aqueueList.Count);
+            for (int i = 0; i < aqueueList.Count; i++)
+                sw.WriteLine(aqueueList[i]);
+            sw.WriteLine(cqueue.Count);
+            Queue<Double>.Enumerator enumerator = cqueue.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                sw.WriteLine(enumerator.Current);
+            }
+            sw.WriteLine(iqueue.Count);
+            Queue<MappedPoint>.Enumerator enumerator2 = iqueue.GetEnumerator();
+            while (enumerator2.MoveNext())
+            {
+                int x = enumerator2.Current.X;
+                sw.WriteLine(x);
+                sw.WriteLine(enumerator2.Current.Y);
+                sw.WriteLine(enumerator2.Current.Val);
+                enumerator2.MoveNext();
+                sw.WriteLine(enumerator2.Current.Val);
+                enumerator2.MoveNext();
+                x = enumerator2.Current.X - x;
+                sw.WriteLine(enumerator2.Current.Val);
+                enumerator2.MoveNext();
+                sw.WriteLine(enumerator2.Current.Val);
+                sw.WriteLine(x);
+            }
+            sw.Close();
         }
 
         public Queue<MappedPoint> Iqueue

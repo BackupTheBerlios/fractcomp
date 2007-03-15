@@ -166,8 +166,12 @@ namespace FractalCompression.Tools
 
         private bool SafePutPixel(int x, int y, int val, Bitmap bit)
         {
-            if (x >= 0 && y >= 0 && x < bit.Width && y < bit.Width && val < 256 && val >= 0)
+            if (x >= 0 && y >= 0 && x < bit.Width && y < bit.Width )
             {
+                if (val > 255)
+                    val = 255;
+                if (val < 0)
+                    val = 0;
                 if (bit.GetPixel(x, y).ToArgb()==Color.Green.ToArgb())
                 {
                     bit.SetPixel(x, y, Color.FromArgb(val, val, val));
@@ -243,7 +247,6 @@ namespace FractalCompression.Tools
                         (int)p.Val));
                 interPixel++;
             }
-
             
             //g³owna petla
             bool newPixel = true;
@@ -254,7 +257,6 @@ namespace FractalCompression.Tools
             {
                 newPixel = false;
                 Console.Out.WriteLine("Iteration " + cos++);
-
                 for (int i = 0; i < interpolationPoints.Count; i+=4)
                 {
                     int address = addresses[i / 4];
@@ -272,20 +274,25 @@ namespace FractalCompression.Tools
                         int sizeOfQueue = domainsPoints[address].Count;
                         for (int j = 0; j < sizeOfQueue; j++)
                         {
-                            
                             MappedPoint point = domainsPoints[address].Dequeue();
                             domainsPoints[address].Enqueue(point);
                             MappedPoint newPoint = mapper.MapPoint(point.X, point.Y, point.Val);
-                            MappedPoint[] mapPoints = ConvertMappedPoint(newPoint);
+                            //ten zakomentowany kod nie wplywa na wyglad, wiec lepiej aby dzialalo 4 razy szybciej
+                         /*   MappedPoint[] mapPoints = ConvertMappedPoint(newPoint);
                             for(int k=0;k<mapPoints.Length;k++)
                                 if (SafePutPixel(mapPoints[k].X, mapPoints[k].Y, (int)newPoint.Val, bit))
                             {
                                 newPixel = true;
                                 int domainAddress = FindDomainByPoint(mapPoints[k]);
                                 domainsPoints[domainAddress].Enqueue(mapPoints[k]);
+                            }*/
+                            if (SafePutPixel((int)newPoint.X, (int)newPoint.Y, (int)newPoint.Val, bit))
+                            {
+                                newPixel = true;
+                                int domainAddress = FindDomainByPoint(newPoint);
+                                domainsPoints[domainAddress].Enqueue(newPoint);
                             }
                         }
-
                     }
                 }
             }

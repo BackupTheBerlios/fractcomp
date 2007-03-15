@@ -285,10 +285,41 @@ namespace FractalCompression.Tools
 
         public static CompResult DeserializeCompResult(string filepath)
         {
-            FileStream fs = new FileStream(filepath, FileMode.Open);
-            BinaryFormatter bf = new BinaryFormatter();
-            CompResult result = (CompResult)bf.Deserialize(fs);
-            fs.Close();
+            List<int> aQueue = new List<int>();
+            Queue<double> cQueue = new Queue<double>();
+            Queue<MappedPoint> iQueue = new Queue<MappedPoint>();
+            StreamReader sr = new StreamReader(filepath);
+            int bigDelta = Int32.Parse(sr.ReadLine());
+            int smallDelta = Int32.Parse(sr.ReadLine());
+            int a = Int32.Parse(sr.ReadLine());
+            int dmax = Int32.Parse(sr.ReadLine());
+            int width = Int32.Parse(sr.ReadLine());
+            int height = Int32.Parse(sr.ReadLine());
+            int aCount = Int32.Parse(sr.ReadLine());
+            for (int i = 0; i < aCount; i++)
+               aQueue.Add(Int32.Parse(sr.ReadLine()));
+            int cCount = Int32.Parse(sr.ReadLine());
+            for (int i = 0; i < cCount; i++)
+            {
+                cQueue.Enqueue(Double.Parse(sr.ReadLine()));
+            }
+            int iCount = Int32.Parse(sr.ReadLine());
+            for (int i = 0; i < iCount / 4; i++)
+            {
+                int x = Int32.Parse(sr.ReadLine());
+                int y = Int32.Parse(sr.ReadLine());
+                double val = Double.Parse(sr.ReadLine());
+                double val1 = Double.Parse(sr.ReadLine());
+                double val2 = Double.Parse(sr.ReadLine());
+                double val3 = Double.Parse(sr.ReadLine());
+                int tempX = Int32.Parse(sr.ReadLine());
+                iQueue.Enqueue(new MappedPoint(x, y, val));
+                iQueue.Enqueue(new MappedPoint(x, y - tempX, val1));
+                iQueue.Enqueue(new MappedPoint(x + tempX, y - tempX, val2));
+                iQueue.Enqueue(new MappedPoint(x + tempX, y, val3));
+            }
+            sr.Close();
+            CompResult result = new CompResult(aQueue, cQueue, iQueue, bigDelta, smallDelta, a, dmax, width, height);
             return result;
         }
 
