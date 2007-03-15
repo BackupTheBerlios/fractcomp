@@ -14,6 +14,7 @@ namespace FractalCompression.Tools
     {
         public static bool CheckConditionOfContinuity(Domain[,] domains, int i, int j, int a, FractalCompression.Structure.Region region, Bitmap bitmap)
         {
+            const double contEps = 0.5;
             if (i < 0 || j < 0 || (i > domains.GetUpperBound(0)) || (j > domains.GetUpperBound(1)))
                 throw new ArgumentException("Incorrect i or j values");
 
@@ -29,12 +30,21 @@ namespace FractalCompression.Tools
             for (int v = 1; v < a; v++)
             {
                 //Console.WriteLine(sij * dij.Right(v, bitmap) + " ? " + (sip1j * dip1j.Left(v, bitmap)));
-                if ((sij * dij.Right(v, bitmap)) != (sip1j * dip1j.Left(v, bitmap)))
+                /*if ((sij * dij.Right(v, bitmap)) != (sip1j * dip1j.Left(v, bitmap)))
                     return false;
                 if ((sij * dij.Up(v, bitmap)) != (sijp1 * dijp1.Down(v, bitmap)))
+                    return false;*/
+
+                //Console.WriteLine(Math.Abs(((sij * dij.Right(v, bitmap)) - (sip1j * dip1j.Left(v, bitmap)))));                    
+                //Console.WriteLine(Math.Abs(((sij * dij.Up(v, bitmap)) - (sijp1 * dijp1.Down(v, bitmap)))));
+
+                if (Math.Abs(((sij * dij.Right(v, bitmap)) - (sip1j * dip1j.Left(v, bitmap)))) > contEps)
+                    return false;
+                if (Math.Abs(((sij * dij.Up(v, bitmap)) - (sijp1 * dijp1.Down(v, bitmap)))) > contEps)
                     return false;
             }
 
+            Console.WriteLine("condition of continuity true");
             return true;
         }
 

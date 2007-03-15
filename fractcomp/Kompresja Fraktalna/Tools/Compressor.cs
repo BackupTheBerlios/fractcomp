@@ -93,9 +93,9 @@ namespace FractalCompression.Tools
                                     continue;
                                 }
 
-                             /*   if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
+                                if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
                                     if (!POTools.CheckConditionOfContinuity(domains, i, j, a, r, bitmap))
-                                        continue;*/
+                                        continue;
 
                                Point pk = dom.Vertices[1], pi = r.Vertices[1];
                                 Mapper mapper = new Mapper(s, pk, pi, smallDelta, bigDelta,
