@@ -13,19 +13,33 @@ namespace FractalCompression.Tools
         {
             double u = 0, v = 0;
             //poziomo dla domeny 
-            u += ComputeVertically(domain.Vertices[1].X, domain.Vertices[1].Y,
-                domain.Vertices[3].X, domain.Vertices[3].Y, bitmap);
-            //pionowa dla domeny
-            u += ComputeHorizontally(domain.Vertices[1].X, domain.Vertices[1].Y,
-                domain.Vertices[3].X, domain.Vertices[3].Y, bitmap);
-            u = u / (2 * domain.Size);
-            //poziomo dla regionu 
-            v += ComputeVertically(region.Vertices[1].X, region.Vertices[1].Y,
-                region.Vertices[3].X, region.Vertices[3].Y, bitmap);
-            //pionowa dla domeny
-            v += ComputeHorizontally(region.Vertices[1].X, region.Vertices[1].Y,
-                region.Vertices[3].X, region.Vertices[3].Y, bitmap);
-            v = v / (2 * region.Size);
+            if (domain.WasUCounted)
+                u = domain.U;
+            else
+            {
+                u += ComputeVertically(domain.Vertices[1].X, domain.Vertices[1].Y,
+                    domain.Vertices[3].X, domain.Vertices[3].Y, bitmap);
+                //pionowa dla domeny
+                u += ComputeHorizontally(domain.Vertices[1].X, domain.Vertices[1].Y,
+                    domain.Vertices[3].X, domain.Vertices[3].Y, bitmap);
+                u = u / (2 * domain.Size);
+                domain.U = u;
+                domain.WasUCounted = true;
+            }
+            if (region.WasVCounted)
+                v = region.V;
+            else
+            {
+                //poziomo dla regionu 
+                v += ComputeVertically(region.Vertices[1].X, region.Vertices[1].Y,
+                    region.Vertices[3].X, region.Vertices[3].Y, bitmap);
+                //pionowa dla domeny
+                v += ComputeHorizontally(region.Vertices[1].X, region.Vertices[1].Y,
+                    region.Vertices[3].X, region.Vertices[3].Y, bitmap);
+                v = v / (2 * region.Size);
+                region.V = v;
+                region.WasVCounted = true;
+            }
             return  v / u;
         }
 

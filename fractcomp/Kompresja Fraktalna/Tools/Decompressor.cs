@@ -266,31 +266,25 @@ namespace FractalCompression.Tools
                     if (address != -1)                     
                     {
                         MyDomain domain = FindDomainByAddress(address);
-                        Mapper mapper = new Mapper(s, domain.Domain.Vertices[1],
-                            interpolationPoints[i + 1], smallDelta, bigDelta,
-                            domain.Vals[0], domain.Vals[1], domain.Vals[2], domain.Vals[3],
-                            (int)interpolationPoints[i].Val, (int)interpolationPoints[i + 1].Val,
-                            (int)interpolationPoints[i + 2].Val, (int)interpolationPoints[i + 3].Val, false);
-                        int sizeOfQueue = domainsPoints[address].Count;
-                        for (int j = 0; j < sizeOfQueue; j++)
+                        if (domain != null)
                         {
-                            MappedPoint point = domainsPoints[address].Dequeue();
-                            domainsPoints[address].Enqueue(point);
-                            MappedPoint newPoint = mapper.MapPoint(point.X, point.Y, point.Val);
-                            //ten zakomentowany kod nie wplywa na wyglad, wiec lepiej aby dzialalo 4 razy szybciej
-                         /*   MappedPoint[] mapPoints = ConvertMappedPoint(newPoint);
-                            for(int k=0;k<mapPoints.Length;k++)
-                                if (SafePutPixel(mapPoints[k].X, mapPoints[k].Y, (int)newPoint.Val, bit))
+                            Mapper mapper = new Mapper(s, domain.Domain.Vertices[1],
+                                interpolationPoints[i + 1], smallDelta, bigDelta,
+                                domain.Vals[0], domain.Vals[1], domain.Vals[2], domain.Vals[3],
+                                (int)interpolationPoints[i].Val, (int)interpolationPoints[i + 1].Val,
+                                (int)interpolationPoints[i + 2].Val, (int)interpolationPoints[i + 3].Val, false);
+                            int sizeOfQueue = domainsPoints[address].Count;
+                            for (int j = 0; j < sizeOfQueue; j++)
                             {
-                                newPixel = true;
-                                int domainAddress = FindDomainByPoint(mapPoints[k]);
-                                domainsPoints[domainAddress].Enqueue(mapPoints[k]);
-                            }*/
-                            if (SafePutPixel((int)newPoint.X, (int)newPoint.Y, (int)newPoint.Val, bit))
-                            {
-                                newPixel = true;
-                                int domainAddress = FindDomainByPoint(newPoint);
-                                domainsPoints[domainAddress].Enqueue(newPoint);
+                                MappedPoint point = domainsPoints[address].Dequeue();
+                                domainsPoints[address].Enqueue(point);
+                                MappedPoint newPoint = mapper.MapPoint(point.X, point.Y, point.Val);
+                                if (SafePutPixel((int)newPoint.X, (int)newPoint.Y, (int)newPoint.Val, bit))
+                                {
+                                    newPixel = true;
+                                    int domainAddress = FindDomainByPoint(newPoint);
+                                    domainsPoints[domainAddress].Enqueue(newPoint);
+                                }
                             }
                         }
                     }
@@ -318,6 +312,8 @@ namespace FractalCompression.Tools
 
         private MyDomain FindDomainByAddress(int address)
         {
+            if(address == 196)
+                address = 196;
             int domainX = (address % numberOfDomainInWidth) * this.bigDelta;
             int domainY = (address / numberOfDomainInHeight) * this.bigDelta;
             MyDomain md = null;

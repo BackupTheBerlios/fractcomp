@@ -13,6 +13,20 @@ namespace FractalCompression.Structure
         private Point[] vertices;
         private int a;
         private int smallDelta;
+        private double u = -1;
+
+        public double U
+        {
+            get { return u; }
+            set { u = value; }
+        }
+        private bool wasUCounted = false;
+
+        public bool WasUCounted
+        {
+            get { return wasUCounted; }
+            set { wasUCounted = value; }
+        }
         
         public Point[] Vertices
         {

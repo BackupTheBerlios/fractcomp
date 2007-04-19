@@ -10,7 +10,23 @@ namespace FractalCompression.Structure
     class Region
     {
         private Point[] vertices;
-        private double[,] mappedVals;       
+        private double[,] mappedVals;
+        private double v = -1;
+
+        public double V
+        {
+            get { return v; }
+            set { v = value; }
+        }
+        private bool wasVCounted = false;
+
+        public bool WasVCounted
+        {
+            get { return wasVCounted; }
+            set { wasVCounted = value; }
+        }
+
+       
 
         public Point[] Vertices
         {

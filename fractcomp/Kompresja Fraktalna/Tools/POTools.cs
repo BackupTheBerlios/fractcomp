@@ -44,7 +44,7 @@ namespace FractalCompression.Tools
                     return false;
             }
 
-            Console.WriteLine("condition of continuity true");
+            //Console.WriteLine("condition of continuity true");
             return true;
         }
 
