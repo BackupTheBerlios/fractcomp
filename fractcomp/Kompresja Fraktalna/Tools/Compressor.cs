@@ -159,6 +159,8 @@ namespace FractalCompression.Tools
                         cqueue.Enqueue(s);
                         minHQueue.Add(minH);
                     }
+                    else
+                        Console.WriteLine("dipa");
                 }
 
                 if (squeue2.Count != 0)

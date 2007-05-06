@@ -266,9 +266,7 @@ namespace FractalCompression.Tools
                     if (address != -1)                     
                     {
                         MyDomain domain = FindDomainByAddress(address);
-                        if (domain != null)
-                        {
-                            Mapper mapper = new Mapper(s, domain.Domain.Vertices[1],
+                        Mapper mapper = new Mapper(s, domain.Domain.Vertices[1],
                                 interpolationPoints[i + 1], smallDelta, bigDelta,
                                 domain.Vals[0], domain.Vals[1], domain.Vals[2], domain.Vals[3],
                                 (int)interpolationPoints[i].Val, (int)interpolationPoints[i + 1].Val,
@@ -286,7 +284,7 @@ namespace FractalCompression.Tools
                                     domainsPoints[domainAddress].Enqueue(newPoint);
                                 }
                             }
-                        }
+                        
                     }
                 }
             }
@@ -312,8 +310,6 @@ namespace FractalCompression.Tools
 
         private MyDomain FindDomainByAddress(int address)
         {
-            if(address == 196)
-                address = 196;
             int domainX = (address % numberOfDomainInWidth) * this.bigDelta;
             int domainY = (address / numberOfDomainInHeight) * this.bigDelta;
             MyDomain md = null;
