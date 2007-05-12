@@ -66,6 +66,7 @@ namespace FractalCompression.Tools
                         if (coresspondingDomain != -1)
                         {
                             double contractivityFactor = contractivityFactors[j / 4];
+                            //contractivityFactor = 0;
                             MyDomain md = FindDomainByAddress(coresspondingDomain);
                             Mapper mapper = new Mapper(contractivityFactor,
                                 md.Domain.Vertices[1], interpolationPoints[j + 1],

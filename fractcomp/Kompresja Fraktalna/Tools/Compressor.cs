@@ -28,6 +28,7 @@ namespace FractalCompression.Tools
         private Domain[,] domains;
         private FractalCompression.Structure.Region[,] regions;
         private Bitmap bitmap;
+        
 
 
         public Compressor(int bigDelta, int a, int eps, int dmax, Domain[,] domains, FractalCompression.Structure.Region[,] regions, List<MappedPoint> interpolationPoints, Bitmap bitmap)
@@ -89,9 +90,12 @@ namespace FractalCompression.Tools
                                 {
                                     //aqueue.Enqueue(-1);
                                     //cqueue.Enqueue(-1);
+                                    contErr++;
                                     //Console.WriteLine("csErr: " + contErr++);
                                     continue;
                                 }
+                                divErr++;
+
 
                                 if(i!=domains.GetUpperBound(0) && j!=domains.GetUpperBound(1))
                                     if (!POTools.CheckConditionOfContinuity(domains, i, j, a, r, bitmap))
@@ -159,8 +163,8 @@ namespace FractalCompression.Tools
                         cqueue.Enqueue(s);
                         minHQueue.Add(minH);
                     }
-                    else
-                        Console.WriteLine("dipa");
+                 //   else
+                   //     Console.WriteLine("uups");
                 }
 
                 if (squeue2.Count != 0)
@@ -169,7 +173,8 @@ namespace FractalCompression.Tools
                     d++;
                 }
             } while (squeue.Count != 0);
-
+            Console.WriteLine(contErr);
+            Console.WriteLine(divErr);
             //this.optimizedAQueue = POTools.OptimizeAdressesList(aqueue, minHQueue, domains.Length - 1);
         }
 
